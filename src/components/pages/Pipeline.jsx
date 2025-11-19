@@ -33,12 +33,12 @@ const [loading, setLoading] = useState(true);
     try {
       setError("");
       setLoading(true);
-      const [dealsData, contactsData] = await Promise.all([
+const [dealsData, contactsData] = await Promise.all([
         dealService.getAll(),
         contactService.getAll()
       ]);
       setDeals(dealsData);
-      setContacts(contactsData);
+      setContacts(contactsData.data || []);
     } catch (err) {
       setError(err.message || "Failed to load pipeline data");
     } finally {
