@@ -301,10 +301,10 @@ useEffect(() => {
                     </td>
                   </tr>
                 ))}
-              </tbody>
-</table>
+</tbody>
+            </table>
           </div>
-</div>
+        </div>
 
         {/* Pagination */}
         <Pagination
@@ -316,7 +316,7 @@ useEffect(() => {
           onItemsPerPageChange={handleItemsPerPageChange}
           className="rounded-lg shadow-card"
         />
-      </div>
+      </>
       )}
 
       {/* Contact Detail Modal */}
