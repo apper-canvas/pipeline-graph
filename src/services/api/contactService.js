@@ -3,11 +3,13 @@ import { getApperClient } from "@/services/apperClient";
 
 // Contact service for managing contacts using ApperClient
 export const contactService = {
-  async getAll() {
+async getAll(page = 1, limit = 20) {
     try {
       const apperClient = getApperClient();
+      const offset = (page - 1) * limit;
+      
       const response = await apperClient.fetchRecords('contacts_c', {
-fields: [
+        fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -23,7 +25,11 @@ fields: [
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "CreatedBy"}},
           {"field": {"Name": "ModifiedOn"}}
-        ]
+        ],
+        pagingInfo: {
+          limit: limit,
+          offset: offset
+        }
       });
 
       if (!response.success) {
@@ -31,7 +37,7 @@ fields: [
         throw new Error(response.message);
       }
 
-return response.data.map(contact => ({
+      const data = response.data.map(contact => ({
         Id: contact.Id,
         firstName: contact.first_name_c || '',
         lastName: contact.last_name_c || '',
@@ -47,6 +53,14 @@ return response.data.map(contact => ({
         createdBy: contact.CreatedBy?.Name || '',
         updatedAt: contact.ModifiedOn
       }));
+
+      return {
+        data: data,
+        total: response.total || 0,
+        page: page,
+        limit: limit,
+        totalPages: Math.ceil((response.total || 0) / limit)
+      };
     } catch (error) {
       console.error('Error fetching contacts:', error);
       throw error;
@@ -254,10 +268,11 @@ if (!response.success) {
     }
   },
 
-  async search(query, filters = {}) {
+async search(query, filters = {}, page = 1, limit = 20) {
     try {
       const apperClient = getApperClient();
       const whereConditions = [];
+      const offset = (page - 1) * limit;
 
       // Text search across multiple fields
       if (query) {
@@ -282,7 +297,7 @@ if (!response.success) {
       let response;
       if (whereConditions.length > 0) {
         response = await apperClient.fetchRecords('contacts_c', {
-fields: [
+          fields: [
             {"field": {"Name": "Id"}},
             {"field": {"Name": "Name"}},
             {"field": {"Name": "first_name_c"}},
@@ -299,15 +314,25 @@ fields: [
             {"field": {"Name": "CreatedBy"}},
             {"field": {"Name": "ModifiedOn"}}
           ],
-          whereGroups: whereConditions
+          whereGroups: whereConditions,
+          pagingInfo: {
+            limit: limit,
+            offset: offset
+          }
         });
 
         if (!response.success) {
           console.error(response.message);
-          return [];
+          return {
+            data: [],
+            total: 0,
+            page: page,
+            limit: limit,
+            totalPages: 0
+          };
         }
 
-let results = response.data.map(contact => ({
+        let results = response.data.map(contact => ({
           Id: contact.Id,
           firstName: contact.first_name_c || '',
           lastName: contact.last_name_c || '',
@@ -338,14 +363,26 @@ let results = response.data.map(contact => ({
           );
         }
 
-        return results;
+        return {
+          data: results,
+          total: response.total || 0,
+          page: page,
+          limit: limit,
+          totalPages: Math.ceil((response.total || 0) / limit)
+        };
       } else {
-        // If no search query, return all contacts
-        return await this.getAll();
+        // If no search query, return all contacts with pagination
+        return await this.getAll(page, limit);
       }
     } catch (error) {
       console.error("Error searching contacts:", error);
-      return [];
+      return {
+        data: [],
+        total: 0,
+        page: page,
+        limit: limit,
+        totalPages: 0
+      };
     }
   },
 

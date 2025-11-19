@@ -1,42 +1,51 @@
-import React, { useState, useEffect } from "react";
-import SearchBar from "@/components/molecules/SearchBar";
-import FilterDropdown from "@/components/molecules/FilterDropdown";
-import Button from "@/components/atoms/Button";
-import Avatar from "@/components/atoms/Avatar";
-import Badge from "@/components/atoms/Badge";
-import Loading from "@/components/ui/Loading";
-import ErrorView from "@/components/ui/ErrorView";
-import Empty from "@/components/ui/Empty";
-import ContactDetailModal from "@/components/organisms/ContactDetailModal";
-import QuickAddModal from "@/components/organisms/QuickAddModal";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useEffect, useState } from "react";
+import Pagination from "@/components/atoms/Pagination";
 import { contactService } from "@/services/api/contactService";
 import { dealService } from "@/services/api/dealService";
 import { csvExportService } from "@/services/csvExportService";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import FilterDropdown from "@/components/molecules/FilterDropdown";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import ErrorView from "@/components/ui/ErrorView";
+import QuickAddModal from "@/components/organisms/QuickAddModal";
+import ContactDetailModal from "@/components/organisms/ContactDetailModal";
+import Avatar from "@/components/atoms/Avatar";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 
 const Contacts = () => {
-  const [contacts, setContacts] = useState([]);
+const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-const [selectedContact, setSelectedContact] = useState(null);
+  const [selectedContact, setSelectedContact] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
-const [isExporting, setIsExporting] = useState(false);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const loadContacts = async () => {
+const loadContacts = async (page = currentPage, limit = itemsPerPage) => {
     try {
       setError("");
       setLoading(true);
-      const data = await contactService.getAll();
-      setContacts(data);
-      setFilteredContacts(data);
+      const response = await contactService.getAll(page, limit);
+      setContacts(response.data);
+      setFilteredContacts(response.data);
+      setTotalRecords(response.total);
+      setTotalPages(Math.ceil(response.total / limit));
+      setCurrentPage(page);
     } catch (err) {
       setError(err.message || "Failed to load contacts");
     } finally {
@@ -63,15 +72,17 @@ const handleExportContacts = async () => {
     loadContacts();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     const filterContacts = async () => {
       try {
         const filters = {
           company: selectedCompanies,
           tags: selectedTags
         };
-        const filtered = await contactService.search(searchQuery, filters);
-        setFilteredContacts(filtered);
+        const response = await contactService.search(searchQuery, filters, currentPage, itemsPerPage);
+        setFilteredContacts(response.data);
+        setTotalRecords(response.total);
+        setTotalPages(Math.ceil(response.total / itemsPerPage));
       } catch (err) {
         console.error("Filter error:", err);
         setFilteredContacts(contacts);
@@ -79,7 +90,24 @@ const handleExportContacts = async () => {
     };
 
     filterContacts();
-  }, [searchQuery, selectedCompanies, selectedTags, contacts]);
+  }, [searchQuery, selectedCompanies, selectedTags, contacts, currentPage, itemsPerPage]);
+
+  // Reset to first page when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCompanies, selectedTags]);
+
+  // Pagination handlers
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    loadContacts(page, itemsPerPage);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+    loadContacts(1, newItemsPerPage);
+  };
 
   const handleContactClick = (contact) => {
     setSelectedContact(contact);
@@ -274,9 +302,21 @@ const handleExportContacts = async () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+</table>
           </div>
         </div>
+
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+          className="rounded-lg shadow-card"
+        />
+      </div>
       )}
 
       {/* Contact Detail Modal */}
