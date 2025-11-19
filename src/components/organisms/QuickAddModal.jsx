@@ -18,6 +18,7 @@ const [formData, setFormData] = useState({
     address: '',
     emergencyContactName: '',
     emergencyContactNumber: '',
+    tags: '',
     // Deal fields
     title: '',
     value: '',
@@ -123,7 +124,7 @@ if (type === 'contact') {
           address: formData.address,
           emergencyContactName: formData.emergencyContactName,
           emergencyContactNumber: formData.emergencyContactNumber,
-          tags: []
+          tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
         };
         
         await contactService.create(contactData);
@@ -165,6 +166,7 @@ setFormData({
         address: '',
         emergencyContactName: '',
         emergencyContactNumber: '',
+        tags: '',
         title: '',
         value: '',
         stage: 'prospect',
@@ -200,6 +202,7 @@ setFormData({
         address: '',
         emergencyContactName: '',
         emergencyContactNumber: '',
+        tags: '',
         title: '',
         value: '',
         stage: 'prospect',
@@ -359,7 +362,23 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     onChange={(e) => handleInputChange('emergencyContactNumber', e.target.value)}
                     disabled={isSubmitting}
                     className="w-full"
+/>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tags
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.tags}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                    placeholder="Enter tags separated by commas"
+                    className="w-full"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Separate multiple tags with commas
+                  </p>
                 </div>
               </div>
             </>
