@@ -237,154 +237,158 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
         <div className="space-y-4">
 {type === 'contact' ? (
             <>
-              <div className="space-y-1.5">
-                <label htmlFor="contact-name" className="block text-sm font-medium text-gray-900">
-                  Name *
-                </label>
-                <Input
-                  id="contact-name"
-                  type="text"
-                  placeholder="Enter contact name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  error={errors.name}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-error">{errors.name}</p>
-                )}
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-900">
-                  Email *
-                </label>
-                <Input
-                  id="contact-email"
-                  type="email"
-                  placeholder="Enter email address"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  error={errors.email}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-error">{errors.email}</p>
-                )}
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-900">
-                  Phone
-                </label>
-                <Input
-                  id="contact-phone"
-                  type="tel"
-                  placeholder="Enter phone number"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="contact-company" className="block text-sm font-medium text-gray-900">
-                  Company
-                </label>
-                <Input
-                  id="contact-company"
-                  type="text"
-                  placeholder="Enter company name"
-                  value={formData.company}
-                  onChange={(e) => handleInputChange('company', e.target.value)}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
+<div className="space-y-4">
+                <div>
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Name *
+                  </label>
+                  <Input
+                    id="contact-name"
+                    type="text"
+                    placeholder="Enter contact name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    error={errors.name}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                  {errors.name && (
+                    <p className="mt-1.5 text-sm text-error font-medium">{errors.name}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email *
+                  </label>
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    placeholder="Enter email address"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    error={errors.email}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                  {errors.email && (
+                    <p className="mt-1.5 text-sm text-error font-medium">{errors.email}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone
+                  </label>
+                  <Input
+                    id="contact-phone"
+                    type="tel"
+                    placeholder="Enter phone number"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-company" className="block text-sm font-medium text-gray-700 mb-2">
+                    Company
+                  </label>
+                  <Input
+                    id="contact-company"
+                    type="text"
+                    placeholder="Enter company name"
+                    value={formData.company}
+                    onChange={(e) => handleInputChange('company', e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                </div>
               </div>
             </>
           ) : type === 'deal' ? (
             <>
-              <div className="space-y-1.5">
-                <label htmlFor="deal-title" className="block text-sm font-medium text-gray-900">
-                  Deal Title *
-                </label>
-                <Input
-                  id="deal-title"
-                  type="text"
-                  placeholder="Enter deal title"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  error={errors.title}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-                {errors.title && (
-                  <p className="mt-1 text-sm text-error">{errors.title}</p>
-                )}
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="deal-value" className="block text-sm font-medium text-gray-900">
-                  Deal Value *
-                </label>
-                <Input
-                  id="deal-value"
-                  type="number"
-                  placeholder="Enter deal value"
-                  value={formData.value}
-                  onChange={(e) => handleInputChange('value', e.target.value)}
-                  error={errors.value}
-                  disabled={isSubmitting}
-                  className="w-full"
-                  min="0"
-                  step="0.01"
-                />
-                {errors.value && (
-                  <p className="mt-1 text-sm text-error">{errors.value}</p>
-                )}
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="deal-stage" className="block text-sm font-medium text-gray-900">
-                  Stage
-                </label>
-                <Select
-                  id="deal-stage"
-                  value={formData.stage}
-                  onChange={(e) => handleInputChange('stage', e.target.value)}
-                  options={stageOptions}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="space-y-1.5">
-                <label htmlFor="deal-contact" className="block text-sm font-medium text-gray-900">
-                  Contact *
-                </label>
-                <Select
-                  id="deal-contact"
-                  value={formData.contactId}
-                  onChange={(e) => handleInputChange('contactId', e.target.value)}
-                  options={contactOptions}
-                  placeholder="Select a contact"
-                  error={errors.contactId}
-                  disabled={isSubmitting}
-                  className="w-full"
-                />
-                {errors.contactId && (
-                  <p className="mt-1 text-sm text-error">{errors.contactId}</p>
-                )}
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="deal-title" className="block text-sm font-medium text-gray-700 mb-2">
+                    Deal Title *
+                  </label>
+                  <Input
+                    id="deal-title"
+                    type="text"
+                    placeholder="Enter deal title"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    error={errors.title}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                  {errors.title && (
+                    <p className="mt-1.5 text-sm text-error font-medium">{errors.title}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="deal-value" className="block text-sm font-medium text-gray-700 mb-2">
+                    Deal Value *
+                  </label>
+                  <Input
+                    id="deal-value"
+                    type="number"
+                    placeholder="Enter deal value"
+                    value={formData.value}
+                    onChange={(e) => handleInputChange('value', e.target.value)}
+                    error={errors.value}
+                    disabled={isSubmitting}
+                    className="w-full"
+                    min="0"
+                    step="0.01"
+                  />
+                  {errors.value && (
+                    <p className="mt-1.5 text-sm text-error font-medium">{errors.value}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="deal-stage" className="block text-sm font-medium text-gray-700 mb-2">
+                    Stage
+                  </label>
+                  <Select
+                    id="deal-stage"
+                    value={formData.stage}
+                    onChange={(e) => handleInputChange('stage', e.target.value)}
+                    options={stageOptions}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="deal-contact" className="block text-sm font-medium text-gray-700 mb-2">
+                    Contact *
+                  </label>
+                  <Select
+                    id="deal-contact"
+                    value={formData.contactId}
+                    onChange={(e) => handleInputChange('contactId', e.target.value)}
+                    options={contactOptions}
+                    placeholder="Select a contact"
+                    error={errors.contactId}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                  {errors.contactId && (
+                    <p className="mt-1.5 text-sm text-error font-medium">{errors.contactId}</p>
+                  )}
+                </div>
               </div>
             </>
           ) : (
-<>
+            <>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="task-title" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 mb-2">
                     Task Title *
                   </label>
                   <Input
@@ -395,7 +399,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     onChange={(e) => handleInputChange('title', e.target.value)}
                     error={errors.title}
                     disabled={isSubmitting}
-                    className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                    className="w-full"
                   />
                   {errors.title && (
                     <p className="mt-1.5 text-sm text-error font-medium">{errors.title}</p>
@@ -403,7 +407,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                 </div>
                 
                 <div>
-                  <label htmlFor="task-description" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 mb-2">
                     Description
                   </label>
                   <Input
@@ -413,12 +417,12 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     disabled={isSubmitting}
-                    className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                    className="w-full"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="task-due-date" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="task-due-date" className="block text-sm font-medium text-gray-700 mb-2">
                     Due Date
                   </label>
                   <Input
@@ -428,7 +432,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     onChange={(e) => handleInputChange('dueDate', e.target.value)}
                     error={errors.dueDate}
                     disabled={isSubmitting}
-                    className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                    className="w-full"
                   />
                   {errors.dueDate && (
                     <p className="mt-1.5 text-sm text-error font-medium">{errors.dueDate}</p>
@@ -437,7 +441,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="task-priority" className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label htmlFor="task-priority" className="block text-sm font-medium text-gray-700 mb-2">
                       Priority
                     </label>
                     <Select
@@ -446,12 +450,12 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                       onChange={(e) => handleInputChange('priority', e.target.value)}
                       options={priorityOptions}
                       disabled={isSubmitting}
-                      className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                      className="w-full"
                     />
                   </div>
                   
                   <div>
-                    <label htmlFor="task-status" className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label htmlFor="task-status" className="block text-sm font-medium text-gray-700 mb-2">
                       Status
                     </label>
                     <Select
@@ -460,13 +464,13 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                       onChange={(e) => handleInputChange('status', e.target.value)}
                       options={statusOptions}
                       disabled={isSubmitting}
-                      className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                      className="w-full"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="task-contact" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="task-contact" className="block text-sm font-medium text-gray-700 mb-2">
                     Contact
                   </label>
                   <Select
@@ -476,7 +480,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     options={contactOptions}
                     placeholder="Select a contact (optional)"
                     disabled={isSubmitting}
-                    className="w-full shadow-sm border-gray-200 focus:border-primary focus:ring-primary/20 rounded-lg transition-all duration-200"
+                    className="w-full"
                   />
                 </div>
               </div>

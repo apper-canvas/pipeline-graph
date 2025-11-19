@@ -206,78 +206,87 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
                 <div className="p-6 space-y-6">
                   {isEditing ? (
                     <>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              First Name
+                            </label>
+                            <Input
+                              value={formData.firstName}
+                              onChange={(e) => handleInputChange("firstName", e.target.value)}
+                              className="w-full"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Last Name
+                            </label>
+                            <Input
+                              value={formData.lastName}
+                              onChange={(e) => handleInputChange("lastName", e.target.value)}
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
+                        
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            First Name
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email
                           </label>
                           <Input
-                            value={formData.firstName}
-                            onChange={(e) => handleInputChange("firstName", e.target.value)}
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange("email", e.target.value)}
+                            className="w-full"
                           />
                         </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Phone
+                            </label>
+                            <Input
+                              value={formData.phone}
+                              onChange={(e) => handleInputChange("phone", e.target.value)}
+                              className="w-full"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Company
+                            </label>
+                            <Input
+                              value={formData.company}
+                              onChange={(e) => handleInputChange("company", e.target.value)}
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
+                        
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Last Name
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Position
                           </label>
                           <Input
-                            value={formData.lastName}
-                            onChange={(e) => handleInputChange("lastName", e.target.value)}
+                            value={formData.position}
+                            onChange={(e) => handleInputChange("position", e.target.value)}
+                            className="w-full"
                           />
                         </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email
-                        </label>
-                        <Input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange("email", e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Tags (comma separated)
                           </label>
                           <Input
-                            value={formData.phone}
-                            onChange={(e) => handleInputChange("phone", e.target.value)}
+                            value={formData.tags}
+                            onChange={(e) => handleInputChange("tags", e.target.value)}
+                            placeholder="lead, enterprise, hot"
+                            className="w-full"
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Company
-                          </label>
-                          <Input
-                            value={formData.company}
-                            onChange={(e) => handleInputChange("company", e.target.value)}
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Position
-                        </label>
-                        <Input
-                          value={formData.position}
-                          onChange={(e) => handleInputChange("position", e.target.value)}
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Tags (comma separated)
-                        </label>
-                        <Input
-                          value={formData.tags}
-                          onChange={(e) => handleInputChange("tags", e.target.value)}
-                          placeholder="lead, enterprise, hot"
-                        />
                       </div>
                       
                       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
