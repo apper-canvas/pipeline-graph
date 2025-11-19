@@ -1,0 +1,90 @@
+[
+  {
+    "Id": 1,
+    "title": "TechCorp Enterprise License",
+    "contactId": "1",
+    "value": 125000,
+    "stage": "proposal",
+    "probability": 75,
+    "expectedCloseDate": "2024-03-15",
+    "createdAt": "2024-01-20T10:30:00Z",
+    "updatedAt": "2024-02-01T14:15:00Z"
+  },
+  {
+    "Id": 2,
+    "title": "Innovate Solutions Integration",
+    "contactId": "2",
+    "value": 85000,
+    "stage": "negotiation",
+    "probability": 85,
+    "expectedCloseDate": "2024-02-28",
+    "createdAt": "2024-01-22T11:45:00Z",
+    "updatedAt": "2024-02-03T09:20:00Z"
+  },
+  {
+    "Id": 3,
+    "title": "Global Tech Platform Upgrade",
+    "contactId": "3",
+    "value": 200000,
+    "stage": "qualified",
+    "probability": 60,
+    "expectedCloseDate": "2024-04-30",
+    "createdAt": "2024-01-25T14:20:00Z",
+    "updatedAt": "2024-02-02T16:30:00Z"
+  },
+  {
+    "Id": 4,
+    "title": "StartupX Growth Package",
+    "contactId": "4",
+    "value": 35000,
+    "stage": "lead",
+    "probability": 25,
+    "expectedCloseDate": "2024-03-31",
+    "createdAt": "2024-01-28T09:10:00Z",
+    "updatedAt": "2024-02-01T11:45:00Z"
+  },
+  {
+    "Id": 5,
+    "title": "Enterprise Corp Implementation",
+    "contactId": "5",
+    "value": 150000,
+    "stage": "lead",
+    "probability": 20,
+    "expectedCloseDate": "2024-05-15",
+    "createdAt": "2024-01-30T13:25:00Z",
+    "updatedAt": "2024-02-04T10:15:00Z"
+  },
+  {
+    "Id": 6,
+    "title": "MediumCo IT Infrastructure",
+    "contactId": "6",
+    "value": 75000,
+    "stage": "qualified",
+    "probability": 55,
+    "expectedCloseDate": "2024-03-20",
+    "createdAt": "2024-02-01T15:40:00Z",
+    "updatedAt": "2024-02-05T12:30:00Z"
+  },
+  {
+    "Id": 7,
+    "title": "FastGrow Marketing Suite",
+    "contactId": "7",
+    "value": 95000,
+    "stage": "proposal",
+    "probability": 70,
+    "expectedCloseDate": "2024-03-10",
+    "createdAt": "2024-02-02T10:15:00Z",
+    "updatedAt": "2024-02-06T14:45:00Z"
+  },
+  {
+    "Id": 8,
+    "title": "BigCorp Digital Transformation",
+    "contactId": "8",
+    "value": 300000,
+    "stage": "qualified",
+    "probability": 65,
+    "expectedCloseDate": "2024-06-30",
+    "createdAt": "2024-02-03T11:30:00Z",
+    "updatedAt": "2024-02-07T09:20:00Z"
+  }
+]

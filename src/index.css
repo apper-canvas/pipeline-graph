@@ -1,0 +1,90 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Toast Customizations */
+.Toastify__toast-container {
+  font-family: 'Inter', system-ui, sans-serif;
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  min-height: 48px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Pipeline Drop Zone */
+.drop-zone {
+  border: 2px dashed #14b8a6;
+  background: rgba(20, 184, 166, 0.05);
+  transition: all 200ms ease;
+}
+
+/* Animation utilities */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 300ms ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.scale-in {
+  animation: scaleIn 200ms ease-out;
+}
+
+/* Drag and drop styles */
+.dragging {
+  transform: rotate(5deg);
+  opacity: 0.8;
+  z-index: 1000;
+}
