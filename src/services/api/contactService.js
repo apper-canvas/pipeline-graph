@@ -7,7 +7,7 @@ export const contactService = {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords('contacts_c', {
-fields: [
+        fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -37,16 +37,16 @@ fields: [
         email: contact.email_c || '',
         phone: contact.phone_c || '',
         company: contact.company_c || '',
-position: contact.position_c || '',
+        position: contact.position_c || '',
         address: contact.address_c || '',
         emergencyContactName: contact.emergency_name_c || '',
         emergencyContactNumber: contact.emergency_phone_c || '',
-        tags: contact.Tags ? contact.Tags.split(',') : [],
+        tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
         createdAt: contact.CreatedOn,
         updatedAt: contact.ModifiedOn
       }));
     } catch (error) {
-      console.error("Error fetching contacts:", error);
+      console.error('Error fetching contacts:', error);
       throw error;
     }
   },
@@ -54,7 +54,7 @@ position: contact.position_c || '',
   async getById(id) {
     try {
       const apperClient = getApperClient();
-      const response = await apperClient.getRecordById('contacts_c', parseInt(id), {
+      const response = await apperClient.fetchRecords('contacts_c', {
         fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
@@ -64,10 +64,20 @@ position: contact.position_c || '',
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
+          {"field": {"Name": "address_c"}},
+          {"field": {"Name": "emergency_name_c"}},
+          {"field": {"Name": "emergency_phone_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
-        ]
+        ],
+        whereGroups: [{
+          conditions: [{
+            fieldName: "Id",
+            operator: "Equals",
+            values: [id]
+          }]
+        }]
       });
 
       if (!response.success) {
@@ -75,22 +85,25 @@ position: contact.position_c || '',
         throw new Error(response.message);
       }
 
-      const contact = response.data;
-      return {
-        Id: contact.Id,
-        firstName: contact.first_name_c || '',
-        lastName: contact.last_name_c || '',
-        email: contact.email_c || '',
-        phone: contact.phone_c || '',
-company: contact.company_c || '',
-        position: contact.position_c || '',
-        address: contact.address_c || '',
-        emergencyContactName: contact.emergency_name_c || '',
-        emergencyContactNumber: contact.emergency_phone_c || '',
-        tags: contact.Tags ? contact.Tags.split(',') : [],
-        createdAt: contact.CreatedOn,
-        updatedAt: contact.ModifiedOn
-      };
+      if (response.data && response.data.length > 0) {
+        const contact = response.data[0];
+        return {
+          Id: contact.Id,
+          firstName: contact.first_name_c || '',
+          lastName: contact.last_name_c || '',
+          email: contact.email_c || '',
+          phone: contact.phone_c || '',
+          company: contact.company_c || '',
+          position: contact.position_c || '',
+          address: contact.address_c || '',
+          emergencyContactName: contact.emergency_name_c || '',
+          emergencyContactNumber: contact.emergency_phone_c || '',
+          tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
+          createdAt: contact.CreatedOn,
+          updatedAt: contact.ModifiedOn
+        };
+      }
+      return null;
     } catch (error) {
       console.error(`Error fetching contact ${id}:`, error);
       throw error;
@@ -102,8 +115,8 @@ company: contact.company_c || '',
       const apperClient = getApperClient();
       const response = await apperClient.createRecord('contacts_c', {
         records: [{
-Name: `${contactData.name || contactData.firstName || ''} ${contactData.lastName || ''}`.trim() || contactData.email,
-          first_name_c: contactData.firstName || contactData.name,
+          Name: `${contactData.firstName || ''} ${contactData.lastName || ''}`.trim() || contactData.email,
+          first_name_c: contactData.firstName || '',
           last_name_c: contactData.lastName || '',
           email_c: contactData.email,
           phone_c: contactData.phone,
@@ -131,12 +144,12 @@ Name: `${contactData.name || contactData.firstName || ''} ${contactData.lastName
             lastName: contact.last_name_c || '',
             email: contact.email_c || '',
             phone: contact.phone_c || '',
-company: contact.company_c || '',
+            company: contact.company_c || '',
             position: contact.position_c || '',
             address: contact.address_c || '',
             emergencyContactName: contact.emergency_name_c || '',
             emergencyContactNumber: contact.emergency_phone_c || '',
-            tags: contact.Tags ? contact.Tags.split(',') : [],
+            tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
           };
@@ -144,6 +157,7 @@ company: contact.company_c || '',
           throw new Error(result.message);
         }
       }
+      throw new Error('No result returned from create operation');
     } catch (error) {
       console.error("Error creating contact:", error);
       throw error;
@@ -158,19 +172,19 @@ company: contact.company_c || '',
       };
 
       // Only include fields that have values
-      if (contactData.firstName) updateData.first_name_c = contactData.firstName;
-      if (contactData.lastName) updateData.last_name_c = contactData.lastName;
-      if (contactData.firstName || contactData.lastName) {
+      if (contactData.firstName !== undefined) updateData.first_name_c = contactData.firstName;
+      if (contactData.lastName !== undefined) updateData.last_name_c = contactData.lastName;
+      if (contactData.firstName !== undefined || contactData.lastName !== undefined) {
         updateData.Name = `${contactData.firstName || ''} ${contactData.lastName || ''}`.trim();
       }
-if (contactData.email) updateData.email_c = contactData.email;
-      if (contactData.phone) updateData.phone_c = contactData.phone;
-      if (contactData.company) updateData.company_c = contactData.company;
-      if (contactData.position) updateData.position_c = contactData.position;
-      if (contactData.address) updateData.address_c = contactData.address;
-      if (contactData.emergencyContactName) updateData.emergency_name_c = contactData.emergencyContactName;
-      if (contactData.emergencyContactNumber) updateData.emergency_phone_c = contactData.emergencyContactNumber;
-      if (contactData.tags) {
+      if (contactData.email !== undefined) updateData.email_c = contactData.email;
+      if (contactData.phone !== undefined) updateData.phone_c = contactData.phone;
+      if (contactData.company !== undefined) updateData.company_c = contactData.company;
+      if (contactData.position !== undefined) updateData.position_c = contactData.position;
+      if (contactData.address !== undefined) updateData.address_c = contactData.address;
+      if (contactData.emergencyContactName !== undefined) updateData.emergency_name_c = contactData.emergencyContactName;
+      if (contactData.emergencyContactNumber !== undefined) updateData.emergency_phone_c = contactData.emergencyContactNumber;
+      if (contactData.tags !== undefined) {
         updateData.Tags = Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags;
       }
 
@@ -189,13 +203,16 @@ if (contactData.email) updateData.email_c = contactData.email;
           const contact = result.data;
           return {
             Id: contact.Id,
-firstName: contact.first_name_c || '',
+            firstName: contact.first_name_c || '',
             lastName: contact.last_name_c || '',
             email: contact.email_c || '',
             phone: contact.phone_c || '',
             company: contact.company_c || '',
             position: contact.position_c || '',
-            tags: contact.Tags ? contact.Tags.split(',') : [],
+            address: contact.address_c || '',
+            emergencyContactName: contact.emergency_name_c || '',
+            emergencyContactNumber: contact.emergency_phone_c || '',
+            tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
           };
@@ -203,6 +220,7 @@ firstName: contact.first_name_c || '',
           throw new Error(result.message);
         }
       }
+      throw new Error('No result returned from update operation');
     } catch (error) {
       console.error("Error updating contact:", error);
       throw error;
@@ -253,7 +271,7 @@ firstName: contact.first_name_c || '',
         }
       }
 
-let response;
+      let response;
       if (whereConditions.length > 0) {
         response = await apperClient.fetchRecords('contacts_c', {
           fields: [
@@ -292,7 +310,7 @@ let response;
           address: contact.address_c || '',
           emergencyContactName: contact.emergency_name_c || '',
           emergencyContactNumber: contact.emergency_phone_c || '',
-          tags: contact.Tags ? contact.Tags.split(',') : [],
+          tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
           createdAt: contact.CreatedOn,
           updatedAt: contact.ModifiedOn
         }));
@@ -322,27 +340,32 @@ let response;
   },
 
   async exportToCSV(contactsToExport = null) {
-    const dataToExport = contactsToExport || await this.getAll();
-    
-const headers = [
-      { key: 'Id', label: 'Contact ID' },
-      { key: 'firstName', label: 'First Name' },
-      { key: 'lastName', label: 'Last Name' },
-      { key: 'email', label: 'Email' },
-      { key: 'phone', label: 'Phone' },
-      { key: 'company', label: 'Company' },
-      { key: 'address', label: 'Address' },
-      { key: 'emergencyContactName', label: 'Emergency Contact Name' },
-      { key: 'emergencyContactNumber', label: 'Emergency Contact Number' },
-      { key: 'position', label: 'Position' },
-      { key: 'tags', label: 'Tags', formatter: csvExportService.formatArray },
-      { key: 'createdAt', label: 'Created Date', formatter: csvExportService.formatDate },
-      { key: 'updatedAt', label: 'Last Updated', formatter: csvExportService.formatDate }
-    ];
+    try {
+      const dataToExport = contactsToExport || await this.getAll();
+      
+      const headers = [
+        { key: 'Id', label: 'Contact ID' },
+        { key: 'firstName', label: 'First Name' },
+        { key: 'lastName', label: 'Last Name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone' },
+        { key: 'company', label: 'Company' },
+        { key: 'address', label: 'Address' },
+        { key: 'emergencyContactName', label: 'Emergency Contact Name' },
+        { key: 'emergencyContactNumber', label: 'Emergency Contact Number' },
+        { key: 'position', label: 'Position' },
+        { key: 'tags', label: 'Tags', formatter: csvExportService.formatArray },
+        { key: 'createdAt', label: 'Created Date', formatter: csvExportService.formatDate },
+        { key: 'updatedAt', label: 'Last Updated', formatter: csvExportService.formatDate }
+      ];
 
-    const csvContent = csvExportService.convertToCSV(dataToExport, headers);
-    const filename = `contacts_export_${csvExportService.getTimestamp()}.csv`;
-    
-    csvExportService.downloadCSV(csvContent, filename);
+      const csvContent = csvExportService.convertToCSV(dataToExport, headers);
+      const filename = `contacts_export_${csvExportService.getTimestamp()}.csv`;
+      
+      csvExportService.downloadCSV(csvContent, filename);
+    } catch (error) {
+      console.error("Error exporting contacts to CSV:", error);
+      throw error;
+    }
   }
 };
