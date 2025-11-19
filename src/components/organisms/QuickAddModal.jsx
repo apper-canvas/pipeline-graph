@@ -358,12 +358,6 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                 </div>
 
                 {/* Required Fields Note */}
-                <div className="pt-2 border-t border-gray-100">
-                  <p className="text-sm text-gray-500 flex items-center gap-2">
-                    <span className="w-1 h-1 bg-error rounded-full flex-shrink-0"></span>
-                    Required fields
-                  </p>
-                </div>
               </div>
             </>
           ) : type === 'deal' ? (
