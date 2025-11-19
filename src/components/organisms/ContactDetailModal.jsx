@@ -143,7 +143,7 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Avatar
+<Avatar
                 fallback={`${contact.firstName} ${contact.lastName}`}
                 size="lg"
               />

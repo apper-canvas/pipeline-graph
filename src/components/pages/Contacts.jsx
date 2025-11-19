@@ -289,7 +289,8 @@ const handleExportContacts = async () => {
       <QuickAddModal
         isOpen={isQuickAddOpen}
         onClose={() => setIsQuickAddOpen(false)}
-        onSuccess={loadContacts}
+onSuccess={loadContacts}
+        type="contact"
       />
     </div>
   );

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { cn } from "@/utils/cn";
+import { useAuth } from "@/layouts/Root";
 import ApperIcon from "@/components/ApperIcon";
-import Pipeline from "@/components/pages/Pipeline";
-import Header from "@/components/organisms/Header";
+import { cn } from "@/utils/cn";
+
 export default function Layout() {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { logout } = useAuth();
 
   const navigation = [
     { name: "Dashboard", href: "/", icon: "BarChart3" },
@@ -86,12 +87,19 @@ return (
             <ApperIcon name="Menu" className="w-5 h-5" />
           </button>
           
-          <div className="flex items-center space-x-4 ml-auto">
+<div className="flex items-center space-x-4 ml-auto">
             <button className="p-2 rounded-lg text-gray-700 hover:bg-gray-100">
               <ApperIcon name="Bell" className="w-5 h-5" />
             </button>
             <button className="p-2 rounded-lg text-gray-700 hover:bg-gray-100">
               <ApperIcon name="Settings" className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={logout}
+              className="p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+              title="Logout"
+            >
+              <ApperIcon name="LogOut" className="w-5 h-5" />
             </button>
           </div>
         </header>

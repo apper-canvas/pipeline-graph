@@ -122,16 +122,15 @@ const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
     setFilteredTasks(filtered);
   }, [searchQuery, statusFilter, priorityFilter, tasks]);
 
-  const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id.toString() === contactId);
+const getContactName = (contactId) => {
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "No Contact";
   };
 
   const getDealTitle = (dealId) => {
-    const deal = deals.find(d => d.Id.toString() === dealId);
+    const deal = deals.find(d => d.Id.toString() === dealId?.toString());
     return deal?.title || "";
   };
-
   const handleToggleComplete = async (taskId) => {
     try {
       await taskService.toggleComplete(taskId);

@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import MetricCard from "@/components/molecules/MetricCard";
-import Loading from "@/components/ui/Loading";
-import ErrorView from "@/components/ui/ErrorView";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import Avatar from "@/components/atoms/Avatar";
-import Badge from "@/components/atoms/Badge";
+import React, { useEffect, useState } from "react";
 import { dealService } from "@/services/api/dealService";
 import { taskService } from "@/services/api/taskService";
 import { activityService } from "@/services/api/activityService";
 import { contactService } from "@/services/api/contactService";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import MetricCard from "@/components/molecules/MetricCard";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import ErrorView from "@/components/ui/ErrorView";
+import Tasks from "@/components/pages/Tasks";
+import Pipeline from "@/components/pages/Pipeline";
+import Avatar from "@/components/atoms/Avatar";
+import Badge from "@/components/atoms/Badge";
 
 const Dashboard = () => {
   const [data, setData] = useState({
@@ -55,7 +57,7 @@ const Dashboard = () => {
     loadDashboardData();
   }, []);
 
-  const handleCompleteTask = async (taskId) => {
+const handleCompleteTask = async (taskId) => {
     try {
       await taskService.toggleComplete(taskId);
       toast.success("Task marked as complete!");
@@ -65,8 +67,17 @@ const Dashboard = () => {
     }
   };
 
-  const getContactName = (contactId) => {
-    const contact = data.contacts.find(c => c.Id.toString() === contactId);
+  const getPriorityColor = (priority) => {
+    const colors = {
+      high: "error",
+      medium: "warning", 
+      low: "success"
+    };
+    return colors[priority] || "default";
+  };
+
+const getContactName = (contactId) => {
+    const contact = data.contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
   };
 
@@ -90,14 +101,6 @@ const Dashboard = () => {
     return colors[type] || "text-gray-600 bg-gray-100";
   };
 
-  const getPriorityColor = (priority) => {
-    const colors = {
-      high: "error",
-      medium: "warning",
-      low: "success"
-    };
-    return colors[priority] || "default";
-  };
 
   if (loading) return <Loading />;
   if (error) return <ErrorView error={error} onRetry={loadDashboardData} />;

@@ -50,13 +50,13 @@ const [selectedDeal, setSelectedDeal] = useState(null);
     loadData();
   }, []);
 
-  const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id.toString() === contactId);
+const getContactName = (contactId) => {
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
   };
 
   const getContactCompany = (contactId) => {
-    const contact = contacts.find(c => c.Id.toString() === contactId);
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact?.company || "";
   };
 

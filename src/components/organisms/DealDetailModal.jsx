@@ -152,7 +152,7 @@ const DealDetailModal = ({ isOpen, onClose, deal, onUpdate }) => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">
-                {deal.title}
+{deal.title}
               </h3>
               <div className="flex items-center space-x-4 mt-2">
                 <span className="text-2xl font-bold text-primary">

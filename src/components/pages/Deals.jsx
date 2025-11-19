@@ -92,13 +92,13 @@ const [isExporting, setIsExporting] = useState(false);
     setFilteredDeals(filtered);
   }, [searchQuery, selectedStages, deals]);
 
-  const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id.toString() === contactId);
+const getContactName = (contactId) => {
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
   };
 
   const getContactCompany = (contactId) => {
-    const contact = contacts.find(c => c.Id.toString() === contactId);
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact?.company || "";
   };
 

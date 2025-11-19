@@ -1,111 +1,304 @@
-import contacts from "@/services/mockData/contacts.json";
+import { getApperClient } from "@/services/apperClient";
 import { csvExportService } from "@/services/csvExportService";
 
-// Contact service for managing contacts
-// This would typically connect to your backend API
+// Contact service for managing contacts using ApperClient
 export const contactService = {
   async getAll() {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return [...contacts];
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.fetchRecords('contacts_c', {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "company_c"}},
+          {"field": {"Name": "position_c"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "ModifiedOn"}}
+        ]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data.map(contact => ({
+        Id: contact.Id,
+        firstName: contact.first_name_c || '',
+        lastName: contact.last_name_c || '',
+        email: contact.email_c || '',
+        phone: contact.phone_c || '',
+        company: contact.company_c || '',
+        position: contact.position_c || '',
+        tags: contact.Tags ? contact.Tags.split(',') : [],
+        createdAt: contact.CreatedOn,
+        updatedAt: contact.ModifiedOn
+      }));
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      throw error;
+    }
   },
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const contact = contacts.find(c => c.Id === parseInt(id));
-    if (!contact) {
-      throw new Error("Contact not found");
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.getRecordById('contacts_c', parseInt(id), {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "company_c"}},
+          {"field": {"Name": "position_c"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "ModifiedOn"}}
+        ]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      const contact = response.data;
+      return {
+        Id: contact.Id,
+        firstName: contact.first_name_c || '',
+        lastName: contact.last_name_c || '',
+        email: contact.email_c || '',
+        phone: contact.phone_c || '',
+        company: contact.company_c || '',
+        position: contact.position_c || '',
+        tags: contact.Tags ? contact.Tags.split(',') : [],
+        createdAt: contact.CreatedOn,
+        updatedAt: contact.ModifiedOn
+      };
+    } catch (error) {
+      console.error(`Error fetching contact ${id}:`, error);
+      throw error;
     }
-    return { ...contact };
   },
 
   async create(contactData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const newContact = {
-      Id: Math.max(...contacts.map(c => c.Id), 0) + 1,
-      ...contactData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    contacts.push(newContact);
-    return { ...newContact };
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.createRecord('contacts_c', {
+        records: [{
+          Name: `${contactData.name || contactData.firstName || ''} ${contactData.lastName || ''}`.trim() || contactData.email,
+          first_name_c: contactData.firstName || contactData.name,
+          last_name_c: contactData.lastName || '',
+          email_c: contactData.email,
+          phone_c: contactData.phone,
+          company_c: contactData.company,
+          position_c: contactData.position,
+          Tags: Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags
+        }]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results && response.results.length > 0) {
+        const result = response.results[0];
+        if (result.success) {
+          const contact = result.data;
+          return {
+            Id: contact.Id,
+            firstName: contact.first_name_c || '',
+            lastName: contact.last_name_c || '',
+            email: contact.email_c || '',
+            phone: contact.phone_c || '',
+            company: contact.company_c || '',
+            position: contact.position_c || '',
+            tags: contact.Tags ? contact.Tags.split(',') : [],
+            createdAt: contact.CreatedOn,
+            updatedAt: contact.ModifiedOn
+          };
+        } else {
+          throw new Error(result.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error creating contact:", error);
+      throw error;
+    }
   },
 
   async update(id, contactData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const index = contacts.findIndex(c => c.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Contact not found");
+    try {
+      const apperClient = getApperClient();
+      const updateData = {
+        Id: parseInt(id)
+      };
+
+      // Only include fields that have values
+      if (contactData.firstName) updateData.first_name_c = contactData.firstName;
+      if (contactData.lastName) updateData.last_name_c = contactData.lastName;
+      if (contactData.firstName || contactData.lastName) {
+        updateData.Name = `${contactData.firstName || ''} ${contactData.lastName || ''}`.trim();
+      }
+      if (contactData.email) updateData.email_c = contactData.email;
+      if (contactData.phone) updateData.phone_c = contactData.phone;
+      if (contactData.company) updateData.company_c = contactData.company;
+      if (contactData.position) updateData.position_c = contactData.position;
+      if (contactData.tags) {
+        updateData.Tags = Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags;
+      }
+
+      const response = await apperClient.updateRecord('contacts_c', {
+        records: [updateData]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results && response.results.length > 0) {
+        const result = response.results[0];
+        if (result.success) {
+          const contact = result.data;
+          return {
+            Id: contact.Id,
+            firstName: contact.first_name_c || '',
+            lastName: contact.last_name_c || '',
+            email: contact.email_c || '',
+            phone: contact.phone_c || '',
+            company: contact.company_c || '',
+            position: contact.position_c || '',
+            tags: contact.Tags ? contact.Tags.split(',') : [],
+            createdAt: contact.CreatedOn,
+            updatedAt: contact.ModifiedOn
+          };
+        } else {
+          throw new Error(result.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating contact:", error);
+      throw error;
     }
-    
-    contacts[index] = {
-      ...contacts[index],
-      ...contactData,
-      Id: parseInt(id),
-      updatedAt: new Date().toISOString()
-    };
-    
-    return { ...contacts[index] };
   },
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const index = contacts.findIndex(c => c.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Contact not found");
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.deleteRecord('contacts_c', {
+        RecordIds: [parseInt(id)]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+      throw error;
     }
-    
-    contacts.splice(index, 1);
-    return { success: true };
   },
 
   async search(query, filters = {}) {
-    await new Promise(resolve => setTimeout(resolve, 250));
-    
-    let filteredContacts = [...contacts];
-    
-    // Text search
-    if (query) {
-      const searchTerm = query.toLowerCase();
-      filteredContacts = filteredContacts.filter(contact =>
-        contact.firstName.toLowerCase().includes(searchTerm) ||
-        contact.lastName.toLowerCase().includes(searchTerm) ||
-        contact.email.toLowerCase().includes(searchTerm) ||
-        contact.company.toLowerCase().includes(searchTerm) ||
-        contact.position.toLowerCase().includes(searchTerm) ||
-        contact.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-      );
+    try {
+      const apperClient = getApperClient();
+      const whereConditions = [];
+
+      // Text search across multiple fields
+      if (query) {
+        const searchFields = ['first_name_c', 'last_name_c', 'email_c', 'company_c', 'position_c'];
+        const searchConditions = searchFields.map(field => ({
+          fieldName: field,
+          operator: "Contains",
+          values: [query]
+        }));
+
+        if (searchConditions.length > 0) {
+          whereConditions.push({
+            operator: "OR",
+            subGroups: [{
+              conditions: searchConditions,
+              operator: "OR"
+            }]
+          });
+        }
+      }
+
+      let response;
+      if (whereConditions.length > 0) {
+        response = await apperClient.fetchRecords('contacts_c', {
+          fields: [
+            {"field": {"Name": "Id"}},
+            {"field": {"Name": "Name"}},
+            {"field": {"Name": "first_name_c"}},
+            {"field": {"Name": "last_name_c"}},
+            {"field": {"Name": "email_c"}},
+            {"field": {"Name": "phone_c"}},
+            {"field": {"Name": "company_c"}},
+            {"field": {"Name": "position_c"}},
+            {"field": {"Name": "Tags"}},
+            {"field": {"Name": "CreatedOn"}},
+            {"field": {"Name": "ModifiedOn"}}
+          ],
+          whereGroups: whereConditions
+        });
+      } else {
+        // If no search query, get all contacts
+        response = await this.getAll();
+        return response;
+      }
+
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      let results = response.data.map(contact => ({
+        Id: contact.Id,
+        firstName: contact.first_name_c || '',
+        lastName: contact.last_name_c || '',
+        email: contact.email_c || '',
+        phone: contact.phone_c || '',
+        company: contact.company_c || '',
+        position: contact.position_c || '',
+        tags: contact.Tags ? contact.Tags.split(',') : [],
+        createdAt: contact.CreatedOn,
+        updatedAt: contact.ModifiedOn
+      }));
+
+      // Apply client-side filters for company and tags
+      if (filters.company && filters.company.length > 0) {
+        results = results.filter(contact =>
+          filters.company.includes(contact.company)
+        );
+      }
+
+      if (filters.tags && filters.tags.length > 0) {
+        results = results.filter(contact =>
+          filters.tags.some(tag => contact.tags.includes(tag))
+        );
+      }
+
+      return results;
+    } catch (error) {
+      console.error("Error searching contacts:", error);
+      return [];
     }
-    
-    // Company filter
-    if (filters.company && filters.company.length > 0) {
-      filteredContacts = filteredContacts.filter(contact =>
-        filters.company.includes(contact.company)
-      );
-    }
-    
-    // Tags filter
-    if (filters.tags && filters.tags.length > 0) {
-      filteredContacts = filteredContacts.filter(contact =>
-        filters.tags.some(tag => contact.tags.includes(tag))
-      );
-    }
-return filteredContacts;
   },
 
-  /**
-   * Export contacts to CSV format
-   * @param {Array} contactsToExport - Contacts to export (optional, defaults to all)
-   * @returns {Promise<void>} Downloads CSV file
-   */
   async exportToCSV(contactsToExport = null) {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const dataToExport = contactsToExport || contacts;
+    const dataToExport = contactsToExport || await this.getAll();
     
     const headers = [
       { key: 'Id', label: 'Contact ID' },
