@@ -40,14 +40,17 @@ useEffect(() => {
     }
   }, [type, isOpen]);
 
-  const loadContacts = async () => {
-    try {
-      const contactsData = await contactService.getAll();
-      setContacts(contactsData);
-    } catch (error) {
-      console.error('Error loading contacts:', error);
-    }
-  };
+const loadContacts = async () => {
+  try {
+    const contactsData = await contactService.getAll();
+    // Ensure we always have an array, even if service returns null/undefined
+    setContacts(Array.isArray(contactsData) ? contactsData : []);
+  } catch (error) {
+    console.error('Error loading contacts:', error);
+    // Set empty array on error to prevent map errors
+    setContacts([]);
+  }
+};
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -225,10 +228,10 @@ const stageOptions = [
     { value: 'closed-won', label: 'Closed Won' }
   ];
 
-const contactOptions = contacts.map(contact => ({
-    value: contact.Id.toString(),
-    label: `${contact.firstName} ${contact.lastName} - ${contact.company || 'No Company'}`
-  }));
+const contactOptions = Array.isArray(contacts) ? contacts.map(contact => ({
+  value: contact.Id?.toString() || '',
+  label: `${contact.first_name_c || ''} ${contact.last_name_c || ''} - ${contact.company_c || 'No Company'}`
+})) : [];
 
   const priorityOptions = [
     { value: 'low', label: 'Low' },
