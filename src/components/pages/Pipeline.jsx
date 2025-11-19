@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import Badge from "@/components/atoms/Badge";
-import Button from "@/components/atoms/Button";
-import Loading from "@/components/ui/Loading";
-import ErrorView from "@/components/ui/ErrorView";
-import Empty from "@/components/ui/Empty";
-import DealDetailModal from "@/components/organisms/DealDetailModal";
-import QuickAddModal from "@/components/organisms/QuickAddModal";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useEffect, useState } from "react";
 import { dealService } from "@/services/api/dealService";
 import { contactService } from "@/services/api/contactService";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import ErrorView from "@/components/ui/ErrorView";
+import QuickAddModal from "@/components/organisms/QuickAddModal";
+import DealDetailModal from "@/components/organisms/DealDetailModal";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 
 const Pipeline = () => {
   const [deals, setDeals] = useState([]);
   const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-const [selectedDeal, setSelectedDeal] = useState(null);
+  const [selectedDeal, setSelectedDeal] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState(false);
   const [draggedDeal, setDraggedDeal] = useState(null);
@@ -48,9 +48,9 @@ const [selectedDeal, setSelectedDeal] = useState(null);
 
   useEffect(() => {
     loadData();
-  }, []);
+}, []);
 
-const getContactName = (contactId) => {
+  const getContactName = (contactId) => {
     const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
   };
@@ -111,13 +111,13 @@ const getContactName = (contactId) => {
     setIsDetailModalOpen(true);
   };
 
-  if (loading) return <Loading />;
+if (loading) return <Loading />;
   if (error) return <ErrorView error={error} onRetry={loadData} />;
 
   return (
-<div className="space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Sales Pipeline</h1>
           <p className="text-gray-600 mt-2">
@@ -232,17 +232,17 @@ const getContactName = (contactId) => {
             </div>
           );
         })}
-      </div>
+</div>
 
-{/* Deal Detail Modal */}
+      {/* Deal Detail Modal */}
       <DealDetailModal
         isOpen={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
         deal={selectedDeal}
         onUpdate={loadData}
-      />
+/>
 
-{/* Quick Add Modal */}
+      {/* Quick Add Modal */}
       <QuickAddModal
         isOpen={isQuickAddModalOpen}
         onClose={() => setIsQuickAddModalOpen(false)}
