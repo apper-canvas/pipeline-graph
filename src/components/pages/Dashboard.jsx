@@ -77,9 +77,13 @@ const handleCompleteTask = async (taskId) => {
   };
 
 const getContactName = (contactId) => {
-    const contacts = data.contacts || [];
-    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
-    return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
+    // Ensure contacts is always an array and contactId exists
+    if (!contactId || !data.contacts || !Array.isArray(data.contacts)) {
+      return "Unknown Contact";
+    }
+    
+    const contact = data.contacts.find(c => c.Id && c.Id.toString() === contactId.toString());
+    return contact ? `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || "Unknown Contact" : "Unknown Contact";
   };
 
   const formatActivityIcon = (type) => {
