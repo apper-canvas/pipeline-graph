@@ -45,9 +45,9 @@ setFormData({
         address: contact.address || "",
         emergencyContactName: contact.emergencyContactName || "",
         emergencyContactNumber: contact.emergencyContactNumber || "",
-        tags: contact.tags ? contact.tags.join(", ") : "",
-        createdOn: contact.CreatedOn || "",
-        createdBy: contact.CreatedBy?.Name || ""
+tags: contact.tags ? contact.tags.join(", ") : "",
+        createdOn: contact.createdAt || "",
+        createdBy: contact.createdBy || ""
       });
       loadRelatedData();
     }

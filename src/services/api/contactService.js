@@ -7,7 +7,7 @@ export const contactService = {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords('contacts_c', {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -16,11 +16,12 @@ export const contactService = {
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
-{"field": {"Name": "address_c"}},
+          {"field": {"Name": "address_c"}},
           {"field": {"Name": "emergency_contact_name_c"}},
           {"field": {"Name": "emergency_contact_number_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
           {"field": {"Name": "ModifiedOn"}}
         ]
       });
@@ -30,7 +31,7 @@ export const contactService = {
         throw new Error(response.message);
       }
 
-      return response.data.map(contact => ({
+return response.data.map(contact => ({
         Id: contact.Id,
         firstName: contact.first_name_c || '',
         lastName: contact.last_name_c || '',
@@ -38,11 +39,12 @@ export const contactService = {
         phone: contact.phone_c || '',
         company: contact.company_c || '',
         position: contact.position_c || '',
-address: contact.address_c || '',
+        address: contact.address_c || '',
         emergencyContactName: contact.emergency_contact_name_c || '',
         emergencyContactNumber: contact.emergency_contact_number_c || '',
         tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
         createdAt: contact.CreatedOn,
+        createdBy: contact.CreatedBy?.Name || '',
         updatedAt: contact.ModifiedOn
       }));
     } catch (error) {
@@ -55,7 +57,7 @@ address: contact.address_c || '',
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords('contacts_c', {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -64,11 +66,12 @@ address: contact.address_c || '',
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
-{"field": {"Name": "address_c"}},
+          {"field": {"Name": "address_c"}},
           {"field": {"Name": "emergency_contact_name_c"}},
           {"field": {"Name": "emergency_contact_number_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
           {"field": {"Name": "ModifiedOn"}}
         ],
         whereGroups: [{
@@ -86,7 +89,7 @@ address: contact.address_c || '',
       }
 
       if (response.data && response.data.length > 0) {
-        const contact = response.data[0];
+const contact = response.data[0];
         return {
           Id: contact.Id,
           firstName: contact.first_name_c || '',
@@ -95,11 +98,12 @@ address: contact.address_c || '',
           phone: contact.phone_c || '',
           company: contact.company_c || '',
           position: contact.position_c || '',
-address: contact.address_c || '',
+          address: contact.address_c || '',
           emergencyContactName: contact.emergency_contact_name_c || '',
           emergencyContactNumber: contact.emergency_contact_number_c || '',
           tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
           createdAt: contact.CreatedOn,
+          createdBy: contact.CreatedBy?.Name || '',
           updatedAt: contact.ModifiedOn
         };
       }
@@ -278,7 +282,7 @@ if (!response.success) {
       let response;
       if (whereConditions.length > 0) {
         response = await apperClient.fetchRecords('contacts_c', {
-          fields: [
+fields: [
             {"field": {"Name": "Id"}},
             {"field": {"Name": "Name"}},
             {"field": {"Name": "first_name_c"}},
@@ -287,11 +291,12 @@ if (!response.success) {
             {"field": {"Name": "phone_c"}},
             {"field": {"Name": "company_c"}},
             {"field": {"Name": "position_c"}},
-{"field": {"Name": "address_c"}},
+            {"field": {"Name": "address_c"}},
             {"field": {"Name": "emergency_contact_name_c"}},
             {"field": {"Name": "emergency_contact_number_c"}},
             {"field": {"Name": "Tags"}},
             {"field": {"Name": "CreatedOn"}},
+            {"field": {"Name": "CreatedBy"}},
             {"field": {"Name": "ModifiedOn"}}
           ],
           whereGroups: whereConditions
@@ -302,7 +307,7 @@ if (!response.success) {
           return [];
         }
 
-        let results = response.data.map(contact => ({
+let results = response.data.map(contact => ({
           Id: contact.Id,
           firstName: contact.first_name_c || '',
           lastName: contact.last_name_c || '',
@@ -311,11 +316,12 @@ if (!response.success) {
           phone: contact.phone_c || '',
           company: contact.company_c || '',
           position: contact.position_c || '',
-address: contact.address_c || '',
+          address: contact.address_c || '',
           emergencyContactName: contact.emergency_contact_name_c || '',
           emergencyContactNumber: contact.emergency_contact_number_c || '',
           tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
           createdAt: contact.CreatedOn,
+          createdBy: contact.CreatedBy?.Name || '',
           updatedAt: contact.ModifiedOn
         }));
 
