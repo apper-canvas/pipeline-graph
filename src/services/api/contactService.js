@@ -16,9 +16,9 @@ export const contactService = {
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
-          {"field": {"Name": "address_c"}},
-          {"field": {"Name": "emergency_name_c"}},
-          {"field": {"Name": "emergency_phone_c"}},
+{"field": {"Name": "address_c"}},
+          {"field": {"Name": "emergency_contact_name_c"}},
+          {"field": {"Name": "emergency_contact_number_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
@@ -38,9 +38,9 @@ export const contactService = {
         phone: contact.phone_c || '',
         company: contact.company_c || '',
         position: contact.position_c || '',
-        address: contact.address_c || '',
-        emergencyContactName: contact.emergency_name_c || '',
-        emergencyContactNumber: contact.emergency_phone_c || '',
+address: contact.address_c || '',
+        emergencyContactName: contact.emergency_contact_name_c || '',
+        emergencyContactNumber: contact.emergency_contact_number_c || '',
         tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
         createdAt: contact.CreatedOn,
         updatedAt: contact.ModifiedOn
@@ -64,9 +64,9 @@ export const contactService = {
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
-          {"field": {"Name": "address_c"}},
-          {"field": {"Name": "emergency_name_c"}},
-          {"field": {"Name": "emergency_phone_c"}},
+{"field": {"Name": "address_c"}},
+          {"field": {"Name": "emergency_contact_name_c"}},
+          {"field": {"Name": "emergency_contact_number_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
@@ -95,9 +95,9 @@ export const contactService = {
           phone: contact.phone_c || '',
           company: contact.company_c || '',
           position: contact.position_c || '',
-          address: contact.address_c || '',
-          emergencyContactName: contact.emergency_name_c || '',
-          emergencyContactNumber: contact.emergency_phone_c || '',
+address: contact.address_c || '',
+          emergencyContactName: contact.emergency_contact_name_c || '',
+          emergencyContactNumber: contact.emergency_contact_number_c || '',
           tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
           createdAt: contact.CreatedOn,
           updatedAt: contact.ModifiedOn
@@ -122,16 +122,16 @@ export const contactService = {
           phone_c: contactData.phone,
           company_c: contactData.company,
           position_c: contactData.position,
-          address_c: contactData.address,
-          emergency_name_c: contactData.emergencyContactName,
-          emergency_phone_c: contactData.emergencyContactNumber,
+address_c: contactData.address,
+          emergency_contact_name_c: contactData.emergencyContactName,
+          emergency_contact_number_c: contactData.emergencyContactNumber,
           Tags: Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags
         }]
       });
 
-      if (!response.success) {
+if (!response.success) {
         console.error(response.message);
-        throw new Error(response.message);
+        return null;
       }
 
       if (response.results && response.results.length > 0) {
@@ -145,22 +145,24 @@ export const contactService = {
             email: contact.email_c || '',
             phone: contact.phone_c || '',
             company: contact.company_c || '',
-            position: contact.position_c || '',
-            address: contact.address_c || '',
-            emergencyContactName: contact.emergency_name_c || '',
-            emergencyContactNumber: contact.emergency_phone_c || '',
+address: contact.address_c || '',
+            emergencyContactName: contact.emergency_contact_name_c || '',
+            emergencyContactNumber: contact.emergency_contact_number_c || '',
+            tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
-          };
+};
         } else {
-          throw new Error(result.message);
+          console.error('Failed to create contact:', result.message);
+          return null;
         }
       }
-      throw new Error('No result returned from create operation');
+console.error('No result returned from create operation');
+      return null;
     } catch (error) {
       console.error("Error creating contact:", error);
-      throw error;
+      return null;
     }
   },
 
@@ -181,9 +183,9 @@ export const contactService = {
       if (contactData.phone !== undefined) updateData.phone_c = contactData.phone;
       if (contactData.company !== undefined) updateData.company_c = contactData.company;
       if (contactData.position !== undefined) updateData.position_c = contactData.position;
-      if (contactData.address !== undefined) updateData.address_c = contactData.address;
-      if (contactData.emergencyContactName !== undefined) updateData.emergency_name_c = contactData.emergencyContactName;
-      if (contactData.emergencyContactNumber !== undefined) updateData.emergency_phone_c = contactData.emergencyContactNumber;
+if (contactData.address !== undefined) updateData.address_c = contactData.address;
+      if (contactData.emergencyContactName !== undefined) updateData.emergency_contact_name_c = contactData.emergencyContactName;
+      if (contactData.emergencyContactNumber !== undefined) updateData.emergency_contact_number_c = contactData.emergencyContactNumber;
       if (contactData.tags !== undefined) {
         updateData.Tags = Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags;
       }
@@ -192,9 +194,9 @@ export const contactService = {
         records: [updateData]
       });
 
-      if (!response.success) {
+if (!response.success) {
         console.error(response.message);
-        throw new Error(response.message);
+        return null;
       }
 
       if (response.results && response.results.length > 0) {
@@ -209,21 +211,23 @@ export const contactService = {
             phone: contact.phone_c || '',
             company: contact.company_c || '',
             position: contact.position_c || '',
-            address: contact.address_c || '',
-            emergencyContactName: contact.emergency_name_c || '',
-            emergencyContactNumber: contact.emergency_phone_c || '',
+address: contact.address_c || '',
+            emergencyContactName: contact.emergency_contact_name_c || '',
+            emergencyContactNumber: contact.emergency_contact_number_c || '',
             tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
           };
-        } else {
-          throw new Error(result.message);
+} else {
+          console.error('Failed to update contact:', result.message);
+          return null;
         }
       }
-      throw new Error('No result returned from update operation');
-    } catch (error) {
+      console.error('No result returned from update operation');
+      return null;
+} catch (error) {
       console.error("Error updating contact:", error);
-      throw error;
+      return null;
     }
   },
 
@@ -234,15 +238,15 @@ export const contactService = {
         RecordIds: [parseInt(id)]
       });
 
-      if (!response.success) {
+if (!response.success) {
         console.error(response.message);
-        throw new Error(response.message);
+        return { success: false, message: response.message };
       }
 
       return { success: true };
-    } catch (error) {
+} catch (error) {
       console.error("Error deleting contact:", error);
-      throw error;
+      return { success: false, message: error.message };
     }
   },
 
@@ -283,9 +287,9 @@ export const contactService = {
             {"field": {"Name": "phone_c"}},
             {"field": {"Name": "company_c"}},
             {"field": {"Name": "position_c"}},
-            {"field": {"Name": "address_c"}},
-            {"field": {"Name": "emergency_name_c"}},
-            {"field": {"Name": "emergency_phone_c"}},
+{"field": {"Name": "address_c"}},
+            {"field": {"Name": "emergency_contact_name_c"}},
+            {"field": {"Name": "emergency_contact_number_c"}},
             {"field": {"Name": "Tags"}},
             {"field": {"Name": "CreatedOn"}},
             {"field": {"Name": "ModifiedOn"}}
@@ -307,9 +311,9 @@ export const contactService = {
           phone: contact.phone_c || '',
           company: contact.company_c || '',
           position: contact.position_c || '',
-          address: contact.address_c || '',
-          emergencyContactName: contact.emergency_name_c || '',
-          emergencyContactNumber: contact.emergency_phone_c || '',
+address: contact.address_c || '',
+          emergencyContactName: contact.emergency_contact_name_c || '',
+          emergencyContactNumber: contact.emergency_contact_number_c || '',
           tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
           createdAt: contact.CreatedOn,
           updatedAt: contact.ModifiedOn
