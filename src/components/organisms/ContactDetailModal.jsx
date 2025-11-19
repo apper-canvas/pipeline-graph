@@ -393,6 +393,15 @@ const updateData = {
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Number</label>
                           <p className="text-gray-900">{contact.emergencyContactNumber || "—"}</p>
+<div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Created On</label>
+                          <p className="text-gray-900">
+                            {contact.CreatedOn ? new Date(contact.CreatedOn).toLocaleString() : "—"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Created By</label>
+                          <p className="text-gray-900">{contact.CreatedBy?.Name || "—"}</p>
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
@@ -408,6 +417,7 @@ const updateData = {
                             )}
                           </div>
                         </div>
+                      </div>
                       </div>
                     </div>
 )}
