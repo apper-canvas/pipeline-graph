@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import Modal from "@/components/molecules/Modal";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Badge from "@/components/atoms/Badge";
-import Avatar from "@/components/atoms/Avatar";
-import Loading from "@/components/ui/Loading";
-import ErrorView from "@/components/ui/ErrorView";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useEffect, useState } from "react";
 import { contactService } from "@/services/api/contactService";
 import { dealService } from "@/services/api/dealService";
 import { taskService } from "@/services/api/taskService";
 import { activityService } from "@/services/api/activityService";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Modal from "@/components/molecules/Modal";
+import Loading from "@/components/ui/Loading";
+import ErrorView from "@/components/ui/ErrorView";
+import Avatar from "@/components/atoms/Avatar";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
 
 const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("info");
@@ -35,13 +35,16 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
 
   useEffect(() => {
     if (contact && isOpen) {
-      setFormData({
+setFormData({
         firstName: contact.firstName || "",
         lastName: contact.lastName || "",
         email: contact.email || "",
         phone: contact.phone || "",
         company: contact.company || "",
         position: contact.position || "",
+        address: contact.address || "",
+        emergencyContactName: contact.emergencyContactName || "",
+        emergencyContactNumber: contact.emergencyContactNumber || "",
         tags: contact.tags ? contact.tags.join(", ") : ""
       });
       loadRelatedData();
@@ -74,7 +77,7 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
   const handleSave = async () => {
     try {
       setLoading(true);
-      const updateData = {
+const updateData = {
         ...formData,
         tags: formData.tags ? formData.tags.split(",").map(t => t.trim()) : []
       };
@@ -263,7 +266,7 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
                               className="w-full"
                             />
                           </div>
-                        </div>
+</div>
                         
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -272,6 +275,43 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
                           <Input
                             value={formData.position}
                             onChange={(e) => handleInputChange("position", e.target.value)}
+                            className="w-full"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Address
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={formData.address}
+                            onChange={(e) => handleInputChange("address", e.target.value)}
+                            placeholder="Enter full address"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary resize-none"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Emergency Contact Name
+                          </label>
+                          <Input
+                            value={formData.emergencyContactName}
+                            onChange={(e) => handleInputChange("emergencyContactName", e.target.value)}
+                            placeholder="Enter emergency contact name"
+                            className="w-full"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Emergency Contact Number
+                          </label>
+                          <Input
+                            value={formData.emergencyContactNumber}
+                            onChange={(e) => handleInputChange("emergencyContactNumber", e.target.value)}
+                            placeholder="Enter emergency contact number"
                             className="w-full"
                           />
                         </div>
@@ -288,81 +328,63 @@ const ContactDetailModal = ({ isOpen, onClose, contact, onUpdate }) => {
                           />
                         </div>
                       </div>
-                      
-                      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                        <Button
-                          variant="outline"
-                          onClick={() => setIsEditing(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button onClick={handleSave} loading={loading}>
-                          Save Changes
-                        </Button>
-                      </div>
                     </>
                   ) : (
                     <div className="space-y-6">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Contact Information</h4>
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">Email:</span>
-                            <span className="text-sm font-medium">{contact.email}</span>
-                          </div>
-                          {contact.phone && (
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">Phone:</span>
-                              <span className="text-sm font-medium">{contact.phone}</span>
-                            </div>
-                          )}
-                          {contact.company && (
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">Company:</span>
-                              <span className="text-sm font-medium">{contact.company}</span>
-                            </div>
-                          )}
-                          {contact.position && (
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">Position:</span>
-                              <span className="text-sm font-medium">{contact.position}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {contact.tags && contact.tags.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {contact.tags.map((tag, index) => (
-                              <Badge key={index} variant="primary">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                          <p className="text-gray-900">{contact.firstName || "—"}</p>
                         </div>
-                      )}
-                      
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Timeline</h4>
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">Created:</span>
-                            <span className="text-sm font-medium">
-                              {format(new Date(contact.createdAt), "MMM d, yyyy")}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">Last Updated:</span>
-                            <span className="text-sm font-medium">
-                              {format(new Date(contact.updatedAt), "MMM d, yyyy")}
-                            </span>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                          <p className="text-gray-900">{contact.lastName || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                          <p className="text-gray-900">{contact.email || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                          <p className="text-gray-900">{contact.phone || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                          <p className="text-gray-900">{contact.company || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Position</label>
+                          <p className="text-gray-900">{contact.position || "—"}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                          <p className="text-gray-900 whitespace-pre-line">{contact.address || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Name</label>
+                          <p className="text-gray-900">{contact.emergencyContactName || "—"}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Number</label>
+                          <p className="text-gray-900">{contact.emergencyContactNumber || "—"}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                          <div className="flex flex-wrap gap-2">
+                            {contact.tags && contact.tags.length > 0 ? (
+                              contact.tags.map((tag, index) => (
+                                <Badge key={index} variant="primary" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))
+                            ) : (
+                              <span className="text-gray-400">No tags</span>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
+)}
                 </div>
               )}
 

@@ -1,5 +1,5 @@
-import { getApperClient } from "@/services/apperClient";
 import { csvExportService } from "@/services/csvExportService";
+import { getApperClient } from "@/services/apperClient";
 
 // Contact service for managing contacts using ApperClient
 export const contactService = {
@@ -7,7 +7,7 @@ export const contactService = {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords('contacts_c', {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -16,6 +16,9 @@ export const contactService = {
           {"field": {"Name": "phone_c"}},
           {"field": {"Name": "company_c"}},
           {"field": {"Name": "position_c"}},
+          {"field": {"Name": "address_c"}},
+          {"field": {"Name": "emergency_name_c"}},
+          {"field": {"Name": "emergency_phone_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
@@ -34,7 +37,10 @@ export const contactService = {
         email: contact.email_c || '',
         phone: contact.phone_c || '',
         company: contact.company_c || '',
-        position: contact.position_c || '',
+position: contact.position_c || '',
+        address: contact.address_c || '',
+        emergencyContactName: contact.emergency_name_c || '',
+        emergencyContactNumber: contact.emergency_phone_c || '',
         tags: contact.Tags ? contact.Tags.split(',') : [],
         createdAt: contact.CreatedOn,
         updatedAt: contact.ModifiedOn
@@ -76,8 +82,11 @@ export const contactService = {
         lastName: contact.last_name_c || '',
         email: contact.email_c || '',
         phone: contact.phone_c || '',
-        company: contact.company_c || '',
+company: contact.company_c || '',
         position: contact.position_c || '',
+        address: contact.address_c || '',
+        emergencyContactName: contact.emergency_name_c || '',
+        emergencyContactNumber: contact.emergency_phone_c || '',
         tags: contact.Tags ? contact.Tags.split(',') : [],
         createdAt: contact.CreatedOn,
         updatedAt: contact.ModifiedOn
@@ -93,13 +102,16 @@ export const contactService = {
       const apperClient = getApperClient();
       const response = await apperClient.createRecord('contacts_c', {
         records: [{
-          Name: `${contactData.name || contactData.firstName || ''} ${contactData.lastName || ''}`.trim() || contactData.email,
+Name: `${contactData.name || contactData.firstName || ''} ${contactData.lastName || ''}`.trim() || contactData.email,
           first_name_c: contactData.firstName || contactData.name,
           last_name_c: contactData.lastName || '',
           email_c: contactData.email,
           phone_c: contactData.phone,
           company_c: contactData.company,
           position_c: contactData.position,
+          address_c: contactData.address,
+          emergency_name_c: contactData.emergencyContactName,
+          emergency_phone_c: contactData.emergencyContactNumber,
           Tags: Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags
         }]
       });
@@ -119,8 +131,11 @@ export const contactService = {
             lastName: contact.last_name_c || '',
             email: contact.email_c || '',
             phone: contact.phone_c || '',
-            company: contact.company_c || '',
+company: contact.company_c || '',
             position: contact.position_c || '',
+            address: contact.address_c || '',
+            emergencyContactName: contact.emergency_name_c || '',
+            emergencyContactNumber: contact.emergency_phone_c || '',
             tags: contact.Tags ? contact.Tags.split(',') : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
@@ -148,10 +163,13 @@ export const contactService = {
       if (contactData.firstName || contactData.lastName) {
         updateData.Name = `${contactData.firstName || ''} ${contactData.lastName || ''}`.trim();
       }
-      if (contactData.email) updateData.email_c = contactData.email;
+if (contactData.email) updateData.email_c = contactData.email;
       if (contactData.phone) updateData.phone_c = contactData.phone;
       if (contactData.company) updateData.company_c = contactData.company;
       if (contactData.position) updateData.position_c = contactData.position;
+      if (contactData.address) updateData.address_c = contactData.address;
+      if (contactData.emergencyContactName) updateData.emergency_name_c = contactData.emergencyContactName;
+      if (contactData.emergencyContactNumber) updateData.emergency_phone_c = contactData.emergencyContactNumber;
       if (contactData.tags) {
         updateData.Tags = Array.isArray(contactData.tags) ? contactData.tags.join(',') : contactData.tags;
       }
@@ -171,7 +189,7 @@ export const contactService = {
           const contact = result.data;
           return {
             Id: contact.Id,
-            firstName: contact.first_name_c || '',
+firstName: contact.first_name_c || '',
             lastName: contact.last_name_c || '',
             email: contact.email_c || '',
             phone: contact.phone_c || '',
@@ -235,7 +253,7 @@ export const contactService = {
         }
       }
 
-      let response;
+let response;
       if (whereConditions.length > 0) {
         response = await apperClient.fetchRecords('contacts_c', {
           fields: [
@@ -247,50 +265,56 @@ export const contactService = {
             {"field": {"Name": "phone_c"}},
             {"field": {"Name": "company_c"}},
             {"field": {"Name": "position_c"}},
+            {"field": {"Name": "address_c"}},
+            {"field": {"Name": "emergency_name_c"}},
+            {"field": {"Name": "emergency_phone_c"}},
             {"field": {"Name": "Tags"}},
             {"field": {"Name": "CreatedOn"}},
             {"field": {"Name": "ModifiedOn"}}
           ],
           whereGroups: whereConditions
         });
+
+        if (!response.success) {
+          console.error(response.message);
+          return [];
+        }
+
+        let results = response.data.map(contact => ({
+          Id: contact.Id,
+          firstName: contact.first_name_c || '',
+          lastName: contact.last_name_c || '',
+          email: contact.email_c || '',
+          name: contact.Name || '',
+          phone: contact.phone_c || '',
+          company: contact.company_c || '',
+          position: contact.position_c || '',
+          address: contact.address_c || '',
+          emergencyContactName: contact.emergency_name_c || '',
+          emergencyContactNumber: contact.emergency_phone_c || '',
+          tags: contact.Tags ? contact.Tags.split(',') : [],
+          createdAt: contact.CreatedOn,
+          updatedAt: contact.ModifiedOn
+        }));
+
+        // Apply client-side filters for company and tags
+        if (filters.company && filters.company.length > 0) {
+          results = results.filter(contact =>
+            filters.company.includes(contact.company)
+          );
+        }
+
+        if (filters.tags && filters.tags.length > 0) {
+          results = results.filter(contact =>
+            filters.tags.some(tag => contact.tags.includes(tag))
+          );
+        }
+
+        return results;
       } else {
-        // If no search query, get all contacts
-        response = await this.getAll();
-        return response;
+        // If no search query, return all contacts
+        return await this.getAll();
       }
-
-      if (!response.success) {
-        console.error(response.message);
-        return [];
-      }
-
-      let results = response.data.map(contact => ({
-        Id: contact.Id,
-        firstName: contact.first_name_c || '',
-        lastName: contact.last_name_c || '',
-        email: contact.email_c || '',
-        phone: contact.phone_c || '',
-        company: contact.company_c || '',
-        position: contact.position_c || '',
-        tags: contact.Tags ? contact.Tags.split(',') : [],
-        createdAt: contact.CreatedOn,
-        updatedAt: contact.ModifiedOn
-      }));
-
-      // Apply client-side filters for company and tags
-      if (filters.company && filters.company.length > 0) {
-        results = results.filter(contact =>
-          filters.company.includes(contact.company)
-        );
-      }
-
-      if (filters.tags && filters.tags.length > 0) {
-        results = results.filter(contact =>
-          filters.tags.some(tag => contact.tags.includes(tag))
-        );
-      }
-
-      return results;
     } catch (error) {
       console.error("Error searching contacts:", error);
       return [];
@@ -300,13 +324,16 @@ export const contactService = {
   async exportToCSV(contactsToExport = null) {
     const dataToExport = contactsToExport || await this.getAll();
     
-    const headers = [
+const headers = [
       { key: 'Id', label: 'Contact ID' },
       { key: 'firstName', label: 'First Name' },
       { key: 'lastName', label: 'Last Name' },
       { key: 'email', label: 'Email' },
       { key: 'phone', label: 'Phone' },
       { key: 'company', label: 'Company' },
+      { key: 'address', label: 'Address' },
+      { key: 'emergencyContactName', label: 'Emergency Contact Name' },
+      { key: 'emergencyContactNumber', label: 'Emergency Contact Number' },
       { key: 'position', label: 'Position' },
       { key: 'tags', label: 'Tags', formatter: csvExportService.formatArray },
       { key: 'createdAt', label: 'Created Date', formatter: csvExportService.formatDate },

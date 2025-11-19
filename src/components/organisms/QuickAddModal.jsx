@@ -15,6 +15,9 @@ const [formData, setFormData] = useState({
     email: '',
     phone: '',
     company: '',
+    address: '',
+    emergencyContactName: '',
+    emergencyContactNumber: '',
     // Deal fields
     title: '',
     value: '',
@@ -117,6 +120,9 @@ if (type === 'contact') {
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
+          address: formData.address,
+          emergencyContactName: formData.emergencyContactName,
+          emergencyContactNumber: formData.emergencyContactNumber,
           tags: []
         };
         
@@ -156,6 +162,9 @@ setFormData({
         email: '',
         phone: '',
         company: '',
+        address: '',
+        emergencyContactName: '',
+        emergencyContactNumber: '',
         title: '',
         value: '',
         stage: 'prospect',
@@ -188,6 +197,9 @@ setFormData({
         email: '',
         phone: '',
         company: '',
+        address: '',
+        emergencyContactName: '',
+        emergencyContactNumber: '',
         title: '',
         value: '',
         stage: 'prospect',
@@ -290,8 +302,7 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     className="w-full"
                   />
                 </div>
-                
-                <div>
+<div>
                   <label htmlFor="contact-company" className="block text-sm font-medium text-gray-700 mb-2">
                     Company
                   </label>
@@ -301,6 +312,51 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     placeholder="Enter company name"
                     value={formData.company}
                     onChange={(e) => handleInputChange('company', e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-address" className="block text-sm font-medium text-gray-700 mb-2">
+                    Address
+                  </label>
+                  <textarea
+                    id="contact-address"
+                    rows={3}
+                    placeholder="Enter full address"
+                    value={formData.address}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-emergency-name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Emergency Contact Name
+                  </label>
+                  <Input
+                    id="contact-emergency-name"
+                    type="text"
+                    placeholder="Enter emergency contact name"
+                    value={formData.emergencyContactName}
+                    onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="contact-emergency-number" className="block text-sm font-medium text-gray-700 mb-2">
+                    Emergency Contact Number
+                  </label>
+                  <Input
+                    id="contact-emergency-number"
+                    type="text"
+                    placeholder="Enter emergency contact number"
+                    value={formData.emergencyContactNumber}
+                    onChange={(e) => handleInputChange('emergencyContactNumber', e.target.value)}
                     disabled={isSubmitting}
                     className="w-full"
                   />
