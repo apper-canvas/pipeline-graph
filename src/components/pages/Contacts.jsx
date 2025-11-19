@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "@/components/atoms/Pagination";
 import { contactService } from "@/services/api/contactService";
 import { dealService } from "@/services/api/dealService";
 import { csvExportService } from "@/services/csvExportService";
@@ -15,6 +14,7 @@ import QuickAddModal from "@/components/organisms/QuickAddModal";
 import ContactDetailModal from "@/components/organisms/ContactDetailModal";
 import Avatar from "@/components/atoms/Avatar";
 import Button from "@/components/atoms/Button";
+import Pagination from "@/components/atoms/Pagination";
 import Badge from "@/components/atoms/Badge";
 
 const Contacts = () => {
@@ -304,7 +304,7 @@ useEffect(() => {
               </tbody>
 </table>
           </div>
-        </div>
+</div>
 
         {/* Pagination */}
         <Pagination
