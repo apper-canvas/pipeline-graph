@@ -237,29 +237,58 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
         <div className="space-y-4">
 {type === 'contact' ? (
             <>
-<div className="space-y-4">
-                <div>
-                  <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Name *
-                  </label>
-                  <Input
-                    id="contact-name"
-                    type="text"
-                    placeholder="Enter contact name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    error={errors.name}
-                    disabled={isSubmitting}
-                    className="w-full"
-                  />
-                  {errors.name && (
-                    <p className="mt-1.5 text-sm text-error font-medium">{errors.name}</p>
-                  )}
+              <div className="space-y-6">
+                {/* Name Fields Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="contact-first-name" className="block text-sm font-semibold text-gray-900 mb-3">
+                      First Name *
+                    </label>
+                    <Input
+                      id="contact-first-name"
+                      type="text"
+                      placeholder="Enter first name"
+                      value={formData.firstName || ''}
+                      onChange={(e) => handleInputChange('firstName', e.target.value)}
+                      error={errors.firstName}
+                      disabled={isSubmitting}
+                      className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    />
+                    {errors.firstName && (
+                      <p className="mt-2 text-sm text-error font-medium flex items-center gap-1">
+                        <span className="w-1 h-1 bg-error rounded-full flex-shrink-0"></span>
+                        {errors.firstName}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="contact-last-name" className="block text-sm font-semibold text-gray-900 mb-3">
+                      Last Name *
+                    </label>
+                    <Input
+                      id="contact-last-name"
+                      type="text"
+                      placeholder="Enter last name"
+                      value={formData.lastName || ''}
+                      onChange={(e) => handleInputChange('lastName', e.target.value)}
+                      error={errors.lastName}
+                      disabled={isSubmitting}
+                      className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    />
+                    {errors.lastName && (
+                      <p className="mt-2 text-sm text-error font-medium flex items-center gap-1">
+                        <span className="w-1 h-1 bg-error rounded-full flex-shrink-0"></span>
+                        {errors.lastName}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                
+
+                {/* Email Field */}
                 <div>
-                  <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
+                  <label htmlFor="contact-email" className="block text-sm font-semibold text-gray-900 mb-3">
+                    Email Address *
                   </label>
                   <Input
                     id="contact-email"
@@ -269,30 +298,52 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     error={errors.email}
                     disabled={isSubmitting}
-                    className="w-full"
+                    className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                   />
                   {errors.email && (
-                    <p className="mt-1.5 text-sm text-error font-medium">{errors.email}</p>
+                    <p className="mt-2 text-sm text-error font-medium flex items-center gap-1">
+                      <span className="w-1 h-1 bg-error rounded-full flex-shrink-0"></span>
+                      {errors.email}
+                    </p>
                   )}
                 </div>
-                
-                <div>
-                  <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone
-                  </label>
-                  <Input
-                    id="contact-phone"
-                    type="tel"
-                    placeholder="Enter phone number"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    disabled={isSubmitting}
-                    className="w-full"
-                  />
+
+                {/* Contact Info Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="contact-phone" className="block text-sm font-semibold text-gray-900 mb-3">
+                      Phone Number
+                    </label>
+                    <Input
+                      id="contact-phone"
+                      type="tel"
+                      placeholder="Enter phone number"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      disabled={isSubmitting}
+                      className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="contact-position" className="block text-sm font-semibold text-gray-900 mb-3">
+                      Position
+                    </label>
+                    <Input
+                      id="contact-position"
+                      type="text"
+                      placeholder="Enter job title"
+                      value={formData.position || ''}
+                      onChange={(e) => handleInputChange('position', e.target.value)}
+                      disabled={isSubmitting}
+                      className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    />
+                  </div>
                 </div>
-                
+
+                {/* Company Field */}
                 <div>
-                  <label htmlFor="contact-company" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-company" className="block text-sm font-semibold text-gray-900 mb-3">
                     Company
                   </label>
                   <Input
@@ -302,8 +353,16 @@ title={`Add New ${type === 'contact' ? 'Contact' : type === 'deal' ? 'Deal' : 'T
                     value={formData.company}
                     onChange={(e) => handleInputChange('company', e.target.value)}
                     disabled={isSubmitting}
-                    className="w-full"
+                    className="w-full h-12 px-4 text-base border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                   />
+                </div>
+
+                {/* Required Fields Note */}
+                <div className="pt-2 border-t border-gray-100">
+                  <p className="text-sm text-gray-500 flex items-center gap-2">
+                    <span className="w-1 h-1 bg-error rounded-full flex-shrink-0"></span>
+                    Required fields
+                  </p>
                 </div>
               </div>
             </>
