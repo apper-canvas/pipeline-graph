@@ -204,7 +204,7 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Contacts List */}
+{/* Contacts List */}
       {filteredContacts.length === 0 ? (
         <Empty
           title="No contacts found"
@@ -212,115 +212,116 @@ useEffect(() => {
           icon="Users"
         />
       ) : (
-        <div className="bg-white rounded-lg shadow-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contact
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Company & Position
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tags
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Last Updated
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredContacts.map((contact) => (
-                  <tr key={contact.Id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <Avatar
-                          fallback={`${contact.firstName} ${contact.lastName}`}
-                          size="md"
-                          className="mr-4"
-                        />
-                        <div>
-                          <button
-                            onClick={() => handleContactClick(contact)}
-                            className="text-sm font-medium text-gray-900 hover:text-primary transition-colors"
-                          >
-                            {contact.firstName} {contact.lastName}
-                          </button>
-                          <div className="text-sm text-gray-500">{contact.email}</div>
-                          {contact.phone && (
-                            <div className="text-sm text-gray-500">{contact.phone}</div>
+        <>
+          <div className="bg-white rounded-lg shadow-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Contact
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Company & Position
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Tags
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Last Updated
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredContacts.map((contact) => (
+                    <tr key={contact.Id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Avatar
+                            fallback={`${contact.firstName} ${contact.lastName}`}
+                            size="md"
+                            className="mr-4"
+                          />
+                          <div>
+                            <button
+                              onClick={() => handleContactClick(contact)}
+                              className="text-sm font-medium text-gray-900 hover:text-primary transition-colors"
+                            >
+                              {contact.firstName} {contact.lastName}
+                            </button>
+                            <div className="text-sm text-gray-500">{contact.email}</div>
+                            {contact.phone && (
+                              <div className="text-sm text-gray-500">{contact.phone}</div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{contact.company || "—"}</div>
+                        <div className="text-sm text-gray-500">{contact.position || "—"}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          {contact.tags && contact.tags.length > 0 ? (
+                            contact.tags.slice(0, 3).map((tag, index) => (
+                              <Badge key={index} variant="primary" className="text-xs">
+                                {tag}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-400">No tags</span>
+                          )}
+                          {contact.tags && contact.tags.length > 3 && (
+                            <Badge variant="default" className="text-xs">
+                              +{contact.tags.length - 3}
+                            </Badge>
                           )}
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{contact.company || "—"}</div>
-                      <div className="text-sm text-gray-500">{contact.position || "—"}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
-                        {contact.tags && contact.tags.length > 0 ? (
-                          contact.tags.slice(0, 3).map((tag, index) => (
-                            <Badge key={index} variant="primary" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))
-                        ) : (
-                          <span className="text-sm text-gray-400">No tags</span>
-                        )}
-                        {contact.tags && contact.tags.length > 3 && (
-                          <Badge variant="default" className="text-xs">
-                            +{contact.tags.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {format(new Date(contact.updatedAt), "MMM d, yyyy")}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
-                        <button
-                          onClick={() => handleContactClick(contact)}
-                          className="text-primary hover:text-primary/80 p-1 rounded transition-colors"
-                        >
-                          <ApperIcon name="Eye" className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteContact(contact.Id)}
-                          className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
-                        >
-                          <ApperIcon name="Trash2" className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-</tbody>
-            </table>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {format(new Date(contact.updatedAt), "MMM d, yyyy")}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end space-x-2">
+                          <button
+                            onClick={() => handleContactClick(contact)}
+                            className="text-primary hover:text-primary/80 p-1 rounded transition-colors"
+                          >
+                            <ApperIcon name="Eye" className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteContact(contact.Id)}
+                            className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                          >
+                            <ApperIcon name="Trash2" className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-          className="rounded-lg shadow-card"
-        />
-      </>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalRecords={totalRecords}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            className="rounded-lg shadow-card"
+          />
+        </>
       )}
 
       {/* Contact Detail Modal */}
-<ContactDetailModal
+      <ContactDetailModal
         isOpen={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
         contact={selectedContact}
@@ -329,7 +330,7 @@ useEffect(() => {
       <QuickAddModal
         isOpen={isQuickAddOpen}
         onClose={() => setIsQuickAddOpen(false)}
-onSuccess={loadContacts}
+        onSuccess={loadContacts}
         type="contact"
       />
     </div>
