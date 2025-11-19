@@ -9,12 +9,13 @@ export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { logout } = useAuth();
 
-  const navigation = [
+const navigation = [
     { name: "Dashboard", href: "/", icon: "BarChart3" },
     { name: "Contacts", href: "/contacts", icon: "Users" },
     { name: "Deals", href: "/deals", icon: "DollarSign" },
     { name: "Pipeline", href: "/pipeline", icon: "GitBranch" },
-    { name: "Tasks", href: "/tasks", icon: "CheckSquare" }
+    { name: "Tasks", href: "/tasks", icon: "CheckSquare" },
+    { name: "Quotes", href: "/quotes", icon: "FileText" }
   ];
 
   const isActive = (href) => {

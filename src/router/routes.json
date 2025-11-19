@@ -63,6 +63,10 @@
       },
       "redirectOnDeny": "/login"
     }
+},
+  "/quotes": {
+    "public": false,
+    "title": "Quotes"
   },
   "/login": {
     "allow": {
