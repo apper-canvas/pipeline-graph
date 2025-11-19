@@ -165,8 +165,7 @@ if (!response.success) {
             company: contact.company_c || '',
 address: contact.address_c || '',
             emergencyContactName: contact.emergency_contact_name_c || '',
-            emergencyContactNumber: contact.emergency_contact_number_c || '',
-            tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
+emergencyContactNumber: contact.emergency_contact_number_c || '',
             tags: contact.Tags ? contact.Tags.split(',').filter(tag => tag.trim()) : [],
             createdAt: contact.CreatedOn,
             updatedAt: contact.ModifiedOn
