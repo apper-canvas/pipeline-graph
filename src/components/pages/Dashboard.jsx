@@ -77,7 +77,8 @@ const handleCompleteTask = async (taskId) => {
   };
 
 const getContactName = (contactId) => {
-    const contact = data.contacts.find(c => c.Id.toString() === contactId?.toString());
+    const contacts = data.contacts || [];
+    const contact = contacts.find(c => c.Id.toString() === contactId?.toString());
     return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
   };
 
