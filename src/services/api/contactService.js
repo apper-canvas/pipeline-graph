@@ -88,11 +88,14 @@ fields: [
           {"field": {"Name": "CreatedBy"}},
           {"field": {"Name": "ModifiedOn"}}
         ],
-        whereGroups: [{
-          conditions: [{
-            fieldName: "Id",
-            operator: "Equals",
-            values: [id]
+whereGroups: [{
+          subGroups: [{
+            conditions: [{
+              fieldName: "Id",
+              operator: "Equals",
+              values: [id]
+            }],
+            operator: ""
           }]
         }]
       });
