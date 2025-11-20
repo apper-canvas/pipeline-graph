@@ -28,7 +28,9 @@ const params = {
           {"field": {"Name": "discounts_c"}},
           {"field": {"Name": "grand_total_c"}},
           {"field": {"Name": "CreatedOn"}},
-          {"field": {"Name": "ModifiedOn"}}
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}}
         ],
         orderBy: [{"fieldName": "quote_date_c", "sorttype": "DESC"}]
       };
@@ -70,7 +72,9 @@ const params = {
           {"field": {"Name": "notes_terms_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
-          {"field": {"Name": "ModifiedOn"}}
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}}
         ]
       };
 
@@ -623,7 +627,9 @@ fields: [
           {"field": {"Name": "grand_total_c"}},
           {"field": {"Name": "notes_terms_c"}},
           {"field": {"Name": "CreatedOn"}},
-          {"field": {"Name": "ModifiedOn"}}
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}}
         ],
         where: whereConditions,
         whereGroups: whereGroups,
