@@ -2,6 +2,9 @@ import { toast } from "react-toastify";
 import React from "react";
 import { getApperClient } from "@/services/apperClient";
 
+// Valid quote statuses
+const validStatuses = ['draft', 'sent', 'accepted', 'rejected', 'expired'];
+
 const TABLE_NAME = 'quotes_c';
 
 // Quote Service Implementation using ApperClient
@@ -250,9 +253,9 @@ const filteredData = {
 },
 
   // Convert quote to invoice
-  async convertToInvoice(quoteId) {
+async convertToInvoice(quoteId) {
     try {
-      setLoading(true);
+      const apperClient = getApperClient();
       
       // First get the quote data
       const quote = await this.getById(quoteId);
@@ -260,7 +263,7 @@ const filteredData = {
         throw new Error('Quote not found');
       }
 
-      // Get line items for the quote
+// Get line items for the quote
       const lineItemsResponse = await apperClient.fetchRecords('line_items_c', {
         fields: [
           {"field": {"Name": "product_service_c"}},
@@ -314,12 +317,11 @@ const filteredData = {
       // Update quote status to indicate it has been converted
       await this.update(quoteId, { status_c: 'Converted' });
 
-      return newInvoice.data;
+return newInvoice.data;
     } catch (error) {
-      console.error('Error converting quote to invoice:', error);
+      console.error("Error converting quote to invoice:", error?.message || error);
+      toast.error("Failed to convert quote to invoice");
       throw error;
-    } finally {
-      setLoading(false);
     }
   },
 
@@ -441,7 +443,7 @@ const filteredData = {
     }
   },
 
-  // Update quote status
+// Update quote status
   async updateStatus(id, status) {
     if (!validStatuses.includes(status)) {
       toast.error('Invalid status');
