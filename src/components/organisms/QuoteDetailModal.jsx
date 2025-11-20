@@ -29,6 +29,7 @@ const [formData, setFormData] = useState({
     tax_percent_c: 0,
     discounts_c: 0,
     grand_total_c: 0,
+    notes_terms_c: '',
     Tags: ''
   });
   const [lineItems, setLineItems] = useState([]);
@@ -46,7 +47,7 @@ const [formData, setFormData] = useState({
     { value: 'Expired', label: 'Expired' }
   ];
 
-  const isCreateMode = !quote;
+const isCreateMode = !quote;
 
   useEffect(() => {
     if (isOpen) {
@@ -64,6 +65,7 @@ Name: quote.Name || '',
           tax_percent_c: quote.tax_percent_c || 0,
           discounts_c: quote.discounts_c || 0,
           grand_total_c: quote.grand_total_c || 0,
+          notes_terms_c: quote.notes_terms_c || '',
           Tags: quote.Tags || ''
         });
         setIsEditing(false);
@@ -86,6 +88,7 @@ expiration_date_c: expirationDate,
           tax_percent_c: 0,
           discounts_c: 0,
           grand_total_c: 0,
+          notes_terms_c: '',
           Tags: ''
         });
         setLineItems([]);
@@ -470,6 +473,26 @@ setSaving(false);
             ) : (
               <div className="text-sm text-gray-900">
                 {formatCurrency(formData.discounts_c)}
+              </div>
+            )}
+          </div>
+
+{/* Notes/Terms */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Notes & Terms
+            </label>
+            {isEditing ? (
+              <textarea
+                value={formData.notes_terms_c}
+                onChange={(e) => handleInputChange('notes_terms_c', e.target.value)}
+                placeholder="Enter notes or terms for this quote"
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            ) : (
+              <div className="text-sm text-gray-900 whitespace-pre-wrap">
+                {quote?.notes_terms_c || 'None'}
               </div>
             )}
           </div>

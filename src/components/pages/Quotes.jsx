@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/molecules/SearchBar';
 import FilterDropdown from '@/components/molecules/FilterDropdown';
 import Loading from '@/components/ui/Loading';
@@ -23,6 +24,7 @@ export default function Quotes() {
   const [sortDirection, setSortDirection] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+const navigate = useNavigate();
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -106,9 +108,8 @@ export default function Quotes() {
     setCurrentPage(1);
   };
 
-  const handleRowClick = (quote) => {
-    setSelectedQuote(quote);
-    setShowDetailModal(true);
+const handleRowClick = (quote) => {
+    navigate(`/quotes/${quote.Id}`);
   };
 
   const handleQuoteUpdate = () => {
@@ -334,10 +335,10 @@ export default function Quotes() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        <button
+<button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleRowClick(quote);
+                            navigate(`/quotes/${quote.Id}`);
                           }}
                           className="text-primary hover:text-primary/80 p-1 rounded"
                           title="View Details"

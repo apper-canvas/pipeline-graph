@@ -64,6 +64,7 @@ const params = {
           {"field": {"Name": "tax_percent_c"}},
           {"field": {"Name": "discounts_c"}},
           {"field": {"Name": "grand_total_c"}},
+          {"field": {"Name": "notes_terms_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
@@ -104,6 +105,7 @@ const filteredData = {
         tax_percent_c: parseFloat(quoteData.tax_percent_c) || 0,
         discounts_c: parseFloat(quoteData.discounts_c) || 0,
         grand_total_c: parseFloat(quoteData.grand_total_c) || 0,
+        notes_terms_c: quoteData.notes_terms_c || "",
         Tags: quoteData.Tags || ""
       };
 
@@ -164,6 +166,7 @@ const filteredData = {
         ...(updateData.tax_percent_c !== undefined && { tax_percent_c: parseFloat(updateData.tax_percent_c) || 0 }),
         ...(updateData.discounts_c !== undefined && { discounts_c: parseFloat(updateData.discounts_c) || 0 }),
         ...(updateData.grand_total_c !== undefined && { grand_total_c: parseFloat(updateData.grand_total_c) || 0 }),
+        ...(updateData.notes_terms_c !== undefined && { notes_terms_c: updateData.notes_terms_c }),
         ...(updateData.Tags !== undefined && { Tags: updateData.Tags })
       };
 
@@ -392,6 +395,7 @@ fields: [
           {"field": {"Name": "tax_percent_c"}},
           {"field": {"Name": "discounts_c"}},
           {"field": {"Name": "grand_total_c"}},
+          {"field": {"Name": "notes_terms_c"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
         ],
