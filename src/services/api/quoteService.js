@@ -247,11 +247,203 @@ const filteredData = {
       toast.error("Failed to delete quote");
       return false;
     }
+},
+
+  // Convert quote to invoice
+  async convertToInvoice(quoteId) {
+    try {
+      setLoading(true);
+      
+      // First get the quote data
+      const quote = await this.getById(quoteId);
+      if (!quote) {
+        throw new Error('Quote not found');
+      }
+
+      // Get line items for the quote
+      const lineItemsResponse = await apperClient.fetchRecords('line_items_c', {
+        fields: [
+          {"field": {"Name": "product_service_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "quantity_c"}},
+          {"field": {"Name": "unit_price_c"}},
+          {"field": {"Name": "total_per_line_c"}}
+        ],
+        where: [{
+          "FieldName": "quote_id_c", 
+          "Operator": "EqualTo",
+          "Values": [quoteId]
+        }]
+      });
+
+      // Prepare invoice data
+      const invoiceData = {
+        Name: `Invoice - ${quote.customer_name_c}`,
+        customer_name_c: quote.customer_name_c,
+        invoice_date_c: new Date().toISOString().split('T')[0],
+        due_date_c: (() => {
+          const dueDate = new Date();
+          dueDate.setDate(dueDate.getDate() + 30); // 30 days from today
+          return dueDate.toISOString().split('T')[0];
+        })(),
+        subtotal_c: quote.subtotal_c,
+        tax_percent_c: quote.tax_percent_c,
+        discounts_c: quote.discounts_c,
+        grand_total_c: quote.grand_total_c,
+        total_amount_c: quote.grand_total_c,
+        status_c: 'Draft',
+        quote_id_c: quoteId,
+        notes_terms_c: quote.notes_terms_c,
+        Tags: quote.Tags
+      };
+
+      // Create invoice record
+      const response = await apperClient.createRecord('invoices_c', {
+        records: [invoiceData]
+      });
+
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to create invoice');
+      }
+
+      const newInvoice = response.results?.[0];
+      if (!newInvoice?.success) {
+        throw new Error(newInvoice?.message || 'Failed to create invoice');
+      }
+
+      // Update quote status to indicate it has been converted
+      await this.update(quoteId, { status_c: 'Converted' });
+
+      return newInvoice.data;
+    } catch (error) {
+      console.error('Error converting quote to invoice:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  },
+
+  // Generate and download quote PDF
+  async generateQuotePDF(quote, lineItems = []) {
+    try {
+      const jsPDF = (await import('jspdf')).default;
+      const html2canvas = (await import('html2canvas')).default;
+
+      // Create PDF document
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let yPosition = 20;
+
+      // Helper function to add text
+      const addText = (text, x, y, options = {}) => {
+        pdf.setFontSize(options.fontSize || 12);
+        pdf.setFont('helvetica', options.fontStyle || 'normal');
+        pdf.text(text, x, y);
+        return y + (options.lineHeight || 6);
+      };
+
+      // Header
+      pdf.setFillColor(30, 58, 138); // Primary color
+      pdf.rect(0, 0, pageWidth, 25, 'F');
+      pdf.setTextColor(255, 255, 255);
+      yPosition = addText('QUOTE', 20, 15, { fontSize: 20, fontStyle: 'bold' });
+      
+      pdf.setTextColor(0, 0, 0); // Reset to black
+      yPosition = 35;
+
+      // Quote details
+      yPosition = addText(`Quote #: ${quote.quote_number_c || 'N/A'}`, 20, yPosition, { fontSize: 14, fontStyle: 'bold' });
+      yPosition = addText(`Customer: ${quote.customer_name_c || 'N/A'}`, 20, yPosition);
+      yPosition = addText(`Quote Date: ${this.formatDate(quote.quote_date_c)}`, 20, yPosition);
+      yPosition = addText(`Expiration Date: ${this.formatDate(quote.expiration_date_c)}`, 20, yPosition);
+      yPosition = addText(`Status: ${quote.status_c || 'Draft'}`, 20, yPosition);
+      yPosition += 10;
+
+      // Line items table
+      if (lineItems && lineItems.length > 0) {
+        // Table header
+        pdf.setFillColor(248, 249, 250);
+        pdf.rect(20, yPosition, pageWidth - 40, 8, 'F');
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Product/Service', 22, yPosition + 5);
+        pdf.text('Qty', 120, yPosition + 5);
+        pdf.text('Unit Price', 140, yPosition + 5);
+        pdf.text('Total', 170, yPosition + 5);
+        yPosition += 12;
+
+        // Table rows
+        pdf.setFont('helvetica', 'normal');
+        lineItems.forEach((item) => {
+          if (yPosition > pageHeight - 30) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+          
+          pdf.text(item.product_service_c || '', 22, yPosition);
+          pdf.text(String(item.quantity_c || '0'), 120, yPosition);
+          pdf.text(`$${(item.unit_price_c || 0).toFixed(2)}`, 140, yPosition);
+          pdf.text(`$${(item.total_per_line_c || 0).toFixed(2)}`, 170, yPosition);
+          yPosition += 6;
+        });
+        yPosition += 10;
+      }
+
+      // Totals
+      const rightAlign = pageWidth - 40;
+      yPosition = addText(`Subtotal: $${(quote.subtotal_c || 0).toFixed(2)}`, rightAlign, yPosition, { fontSize: 10 });
+      yPosition = addText(`Tax (${quote.tax_percent_c || 0}%): $${this.calculateTaxAmount(quote.subtotal_c, quote.tax_percent_c).toFixed(2)}`, rightAlign, yPosition, { fontSize: 10 });
+      yPosition = addText(`Discounts: -$${(quote.discounts_c || 0).toFixed(2)}`, rightAlign, yPosition, { fontSize: 10 });
+      
+      // Grand total with highlight
+      pdf.setFillColor(30, 58, 138);
+      pdf.rect(rightAlign - 50, yPosition - 2, 80, 8, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Total: $${(quote.grand_total_c || 0).toFixed(2)}`, rightAlign, yPosition + 3);
+      pdf.setTextColor(0, 0, 0);
+      yPosition += 15;
+
+      // Notes/Terms
+      if (quote.notes_terms_c) {
+        yPosition = addText('Notes & Terms:', 20, yPosition, { fontSize: 12, fontStyle: 'bold' });
+        const splitText = pdf.splitTextToSize(quote.notes_terms_c, pageWidth - 40);
+        pdf.text(splitText, 20, yPosition);
+      }
+
+      // Generate filename and save
+      const filename = `quote-${quote.quote_number_c || 'draft'}-${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(filename);
+
+      return true;
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      throw new Error('Failed to generate PDF');
+    }
+  },
+
+  // Helper method to calculate tax amount
+  calculateTaxAmount(subtotal, taxPercent) {
+    return (subtotal || 0) * ((taxPercent || 0) / 100);
+  },
+
+  // Helper method to format date
+  formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch {
+} catch {
+      return 'Invalid Date';
+    }
   },
 
   // Update quote status
-async updateStatus(id, status) {
-    const validStatuses = ['Draft', 'Sent', 'Accepted', 'Rejected', 'Expired'];
+  async updateStatus(id, status) {
     if (!validStatuses.includes(status)) {
       toast.error('Invalid status');
       return null;

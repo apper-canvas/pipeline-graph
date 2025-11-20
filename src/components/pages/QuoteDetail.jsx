@@ -88,12 +88,34 @@ export default function QuoteDetail() {
     }
   };
 
-  const handleConvertToInvoice = () => {
-    toast.info('Convert to Invoice feature will be implemented soon');
+const handleConvertToInvoice = async () => {
+    try {
+      setLoading(true);
+      const invoice = await quoteService.convertToInvoice(quote.Id);
+      toast.success(`Quote converted to invoice successfully! Invoice ID: ${invoice.Id}`);
+      
+      // Refresh quote data to show updated status
+      const updatedQuote = await quoteService.getById(quote.Id);
+      setQuote(updatedQuote);
+    } catch (error) {
+      console.error('Error converting to invoice:', error);
+      toast.error(error.message || 'Failed to convert quote to invoice');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleExportPDF = () => {
-    toast.info('Export as PDF feature will be implemented soon');
+  const handleExportPDF = async () => {
+    try {
+      setLoading(true);
+      await quoteService.generateQuotePDF(quote, lineItems);
+      toast.success('Quote PDF downloaded successfully');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      toast.error(error.message || 'Failed to export quote as PDF');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStatusBadgeVariant = (status) => {
