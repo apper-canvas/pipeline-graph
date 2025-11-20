@@ -14,10 +14,8 @@ const navigation = [
     { name: "Contacts", href: "/contacts", icon: "Users" },
     { name: "Deals", href: "/deals", icon: "DollarSign" },
     { name: "Pipeline", href: "/pipeline", icon: "GitBranch" },
-    { name: "Tasks", href: "/tasks", icon: "CheckSquare" },
-    { name: "Quotes", href: "/quotes", icon: "FileText" }
+{ name: "Pipeline", href: "/pipeline", icon: "BarChart3" }
   ];
-
   const isActive = (href) => {
     if (href === "/") {
       return location.pathname === "/";

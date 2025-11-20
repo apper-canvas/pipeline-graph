@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import React, { Suspense, lazy } from "react";
+import NotFound from "@/components/pages/NotFound";
+import Layout from "@/components/organisms/Layout";
 import { getRouteConfig } from "@/router/route.utils";
 import Root from "@/layouts/Root";
-import Layout from "@/components/organisms/Layout";
 
 // Lazy load page components
 const Dashboard = lazy(() => import("@/components/pages/Dashboard"));
@@ -10,11 +11,9 @@ const Contacts = lazy(() => import("@/components/pages/Contacts"));
 const Deals = lazy(() => import("@/components/pages/Deals"));
 const Pipeline = lazy(() => import("@/components/pages/Pipeline"));
 const Tasks = lazy(() => import("@/components/pages/Tasks"));
-const Quotes = lazy(() => import("@/components/pages/Quotes"));
-const NotFound = lazy(() => import("@/components/pages/NotFound"));
+const Callback = lazy(() => import("@/components/pages/Callback"));
 const Login = lazy(() => import("@/components/pages/Login"));
 const Signup = lazy(() => import("@/components/pages/Signup"));
-const Callback = lazy(() => import("@/components/pages/Callback"));
 const ErrorPage = lazy(() => import("@/components/pages/ErrorPage"));
 const ResetPassword = lazy(() => import("@/components/pages/ResetPassword"));
 const PromptPassword = lazy(() => import("@/components/pages/PromptPassword"));
@@ -77,12 +76,7 @@ const mainRoutes = [
   createRoute({
     path: "contacts",
     element: <Contacts />
-  }),
-createRoute({
-    path: "quotes",
-    element: <Quotes />,
-    authenticatedOnly: true
-  }),
+}),
   createRoute({
     path: "deals",
     element: <Deals />
