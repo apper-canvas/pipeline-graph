@@ -230,7 +230,7 @@ const stageOptions = [
 
 const contactOptions = Array.isArray(contacts) ? contacts.map(contact => ({
   value: contact.Id?.toString() || '',
-  label: `${(contact.first_name_c || contact.firstName || '')} ${(contact.last_name_c || contact.lastName || '')} - ${(contact.company_c || contact.company || 'No Company')}`.trim()
+  label: `${(contact.first_name_c || '')} ${(contact.last_name_c || '')} - ${(contact.company_c || 'No Company')}`.trim()
 })) : [];
 
   const priorityOptions = [
