@@ -11,6 +11,7 @@ const Contacts = lazy(() => import("@/components/pages/Contacts"));
 const Deals = lazy(() => import("@/components/pages/Deals"));
 const Pipeline = lazy(() => import("@/components/pages/Pipeline"));
 const Tasks = lazy(() => import("@/components/pages/Tasks"));
+const Quotes = lazy(() => import("@/components/pages/Quotes"));
 const Callback = lazy(() => import("@/components/pages/Callback"));
 const Login = lazy(() => import("@/components/pages/Login"));
 const Signup = lazy(() => import("@/components/pages/Signup"));
@@ -87,7 +88,11 @@ const mainRoutes = [
   }),
   createRoute({
     path: "tasks",
-    element: <Tasks />
+element: <Tasks />
+  }),
+  createRoute({
+    path: "/quotes",
+    element: <Quotes />
   }),
   createRoute({
     path: "*",

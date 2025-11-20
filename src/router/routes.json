@@ -64,16 +64,17 @@
       "redirectOnDeny": "/login"
     }
 },
-  "/tasks": {
+  "/quotes": {
     "allow": {
       "when": {
         "conditions": [
           {
-            "label": "Login page is public",
-            "rule": "public"
+            "label": "Quotes page requires authentication",
+            "rule": "authenticated"
           }
         ]
-      }
+      },
+      "redirectOnDeny": "/login"
     }
   },
   "/signup": {
