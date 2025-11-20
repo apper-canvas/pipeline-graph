@@ -249,9 +249,54 @@ return null;
     } catch (error) {
       console.error("Error deleting line item:", error?.response?.data?.message || error);
       toast.error('Failed to delete line item');
-      return false;
+return false;
+    }
+  }
+
+  async getByQuoteId(quoteId) {
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "product_service_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "quantity_c"}},
+          {"field": {"Name": "unit_price_c"}},
+          {"field": {"Name": "total_per_line_c"}},
+          {"field": {"Name": "quote_id_c"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "ModifiedOn"}}
+        ],
+        where: [{
+          "FieldName": "quote_id_c",
+          "Operator": "EqualTo",
+          "Values": [parseInt(quoteId)],
+          "Include": true
+        }],
+        orderBy: [{
+          "fieldName": "CreatedOn",
+          "sorttype": "ASC"
+        }],
+        pagingInfo: {
+          "limit": 100,
+          "offset": 0
+        }
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+
+      if (!response?.data?.length) {
+        return [];
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching line items for quote ${quoteId}:`, error?.response?.data?.message || error);
+      toast.error('Failed to fetch line items for quote');
+      return [];
     }
   }
 }
-
 export const lineItemService = new LineItemService();
