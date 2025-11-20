@@ -612,15 +612,23 @@ setSaving(false);
 
         {/* System Info */}
         {quote && !isCreateMode && (
-          <div className="border-t border-gray-200 pt-4">
+<div className="border-t border-gray-200 pt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500">
               <div>
                 <span className="font-medium">Created:</span>{' '}
                 {quote.CreatedOn ? formatDate(quote.CreatedOn) : 'N/A'}
               </div>
               <div>
+                <span className="font-medium">Created By:</span>{' '}
+                {quote.CreatedBy?.Name || 'N/A'}
+              </div>
+              <div>
                 <span className="font-medium">Modified:</span>{' '}
                 {quote.ModifiedOn ? formatDate(quote.ModifiedOn) : 'N/A'}
+              </div>
+              <div>
+                <span className="font-medium">Modified By:</span>{' '}
+                {quote.ModifiedBy?.Name || 'N/A'}
               </div>
             </div>
           </div>

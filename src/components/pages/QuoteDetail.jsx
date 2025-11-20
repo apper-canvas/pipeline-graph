@@ -400,13 +400,21 @@ const handleConvertToInvoice = async () => {
           <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">System Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
+<div>
                 <label className="font-medium text-gray-600">Created:</label>
                 <p className="text-gray-900 mt-1">{formatDate(quote.CreatedOn)}</p>
               </div>
               <div>
+                <label className="font-medium text-gray-600">Created By:</label>
+                <p className="text-gray-900 mt-1">{quote.CreatedBy?.Name || 'N/A'}</p>
+              </div>
+              <div>
                 <label className="font-medium text-gray-600">Last Modified:</label>
                 <p className="text-gray-900 mt-1">{formatDate(quote.ModifiedOn)}</p>
+              </div>
+              <div>
+                <label className="font-medium text-gray-600">Modified By:</label>
+                <p className="text-gray-900 mt-1">{quote.ModifiedBy?.Name || 'N/A'}</p>
               </div>
               {quote.Tags && (
                 <div className="md:col-span-2">
