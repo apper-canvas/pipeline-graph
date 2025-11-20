@@ -10,7 +10,7 @@ export const quoteService = {
   async getAll() {
     try {
       const apperClient = getApperClient();
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
@@ -20,6 +20,10 @@ export const quoteService = {
           {"field": {"Name": "expiration_date_c"}},
           {"field": {"Name": "total_amount_c"}},
           {"field": {"Name": "status_c"}},
+          {"field": {"Name": "subtotal_c"}},
+          {"field": {"Name": "tax_percent_c"}},
+          {"field": {"Name": "discounts_c"}},
+          {"field": {"Name": "grand_total_c"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
         ],
@@ -46,7 +50,7 @@ export const quoteService = {
   async getById(id) {
     try {
       const apperClient = getApperClient();
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
@@ -56,6 +60,10 @@ export const quoteService = {
           {"field": {"Name": "expiration_date_c"}},
           {"field": {"Name": "total_amount_c"}},
           {"field": {"Name": "status_c"}},
+          {"field": {"Name": "subtotal_c"}},
+          {"field": {"Name": "tax_percent_c"}},
+          {"field": {"Name": "discounts_c"}},
+          {"field": {"Name": "grand_total_c"}},
           {"field": {"Name": "Tags"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
@@ -84,7 +92,7 @@ export const quoteService = {
       const apperClient = getApperClient();
       
       // Filter only updateable fields
-      const filteredData = {
+const filteredData = {
         Name: quoteData.Name || `Quote - ${quoteData.customer_name_c}`,
         quote_number_c: quoteData.quote_number_c,
         customer_name_c: quoteData.customer_name_c,
@@ -92,6 +100,10 @@ export const quoteService = {
         expiration_date_c: quoteData.expiration_date_c,
         total_amount_c: parseFloat(quoteData.total_amount_c) || 0,
         status_c: quoteData.status_c || 'Draft',
+        subtotal_c: parseFloat(quoteData.subtotal_c) || 0,
+        tax_percent_c: parseFloat(quoteData.tax_percent_c) || 0,
+        discounts_c: parseFloat(quoteData.discounts_c) || 0,
+        grand_total_c: parseFloat(quoteData.grand_total_c) || 0,
         Tags: quoteData.Tags || ""
       };
 
@@ -141,13 +153,17 @@ export const quoteService = {
       // Filter only updateable fields
       const filteredData = {
         Id: parseInt(id),
-        ...(updateData.Name && { Name: updateData.Name }),
+...(updateData.Name && { Name: updateData.Name }),
         ...(updateData.quote_number_c && { quote_number_c: updateData.quote_number_c }),
         ...(updateData.customer_name_c && { customer_name_c: updateData.customer_name_c }),
         ...(updateData.quote_date_c && { quote_date_c: updateData.quote_date_c }),
         ...(updateData.expiration_date_c && { expiration_date_c: updateData.expiration_date_c }),
         ...(updateData.total_amount_c !== undefined && { total_amount_c: parseFloat(updateData.total_amount_c) || 0 }),
         ...(updateData.status_c && { status_c: updateData.status_c }),
+        ...(updateData.subtotal_c !== undefined && { subtotal_c: parseFloat(updateData.subtotal_c) || 0 }),
+        ...(updateData.tax_percent_c !== undefined && { tax_percent_c: parseFloat(updateData.tax_percent_c) || 0 }),
+        ...(updateData.discounts_c !== undefined && { discounts_c: parseFloat(updateData.discounts_c) || 0 }),
+        ...(updateData.grand_total_c !== undefined && { grand_total_c: parseFloat(updateData.grand_total_c) || 0 }),
         ...(updateData.Tags !== undefined && { Tags: updateData.Tags })
       };
 
@@ -231,7 +247,7 @@ export const quoteService = {
   },
 
   // Update quote status
-  async updateStatus(id, status) {
+async updateStatus(id, status) {
     const validStatuses = ['Draft', 'Sent', 'Accepted', 'Rejected', 'Expired'];
     if (!validStatuses.includes(status)) {
       toast.error('Invalid status');
@@ -239,6 +255,43 @@ export const quoteService = {
     }
     
     return this.update(id, { status_c: status });
+  },
+
+  // Calculate totals based on line items and quote parameters
+  calculateTotals(lineItems, taxPercent = 0, discounts = 0) {
+    const subtotal = lineItems.reduce((sum, item) => {
+      return sum + (parseFloat(item.total_per_line_c) || 0);
+    }, 0);
+
+    const taxAmount = (subtotal * taxPercent) / 100;
+    const grandTotal = subtotal + taxAmount - discounts;
+
+    return {
+      subtotal_c: Math.round(subtotal * 100) / 100, // Round to 2 decimal places
+      tax_amount: Math.round(taxAmount * 100) / 100,
+      grand_total_c: Math.round(grandTotal * 100) / 100
+    };
+  },
+
+  // Update quote with calculated totals
+  async updateQuoteTotals(quoteId, lineItems, taxPercent = 0, discounts = 0) {
+    try {
+      const totals = this.calculateTotals(lineItems, taxPercent, discounts);
+      
+      const updateData = {
+        subtotal_c: totals.subtotal_c,
+        tax_percent_c: taxPercent,
+        discounts_c: discounts,
+        grand_total_c: totals.grand_total_c,
+        total_amount_c: totals.grand_total_c // Keep total_amount_c in sync
+      };
+
+      return await this.update(quoteId, updateData);
+    } catch (error) {
+      console.error('Error updating quote totals:', error);
+      toast.error('Failed to update quote totals');
+      return null;
+    }
   },
 
   // Search quotes
@@ -326,7 +379,7 @@ export const quoteService = {
       }
 
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "quote_number_c"}},
@@ -335,6 +388,10 @@ export const quoteService = {
           {"field": {"Name": "expiration_date_c"}},
           {"field": {"Name": "total_amount_c"}},
           {"field": {"Name": "status_c"}},
+          {"field": {"Name": "subtotal_c"}},
+          {"field": {"Name": "tax_percent_c"}},
+          {"field": {"Name": "discounts_c"}},
+          {"field": {"Name": "grand_total_c"}},
           {"field": {"Name": "CreatedOn"}},
           {"field": {"Name": "ModifiedOn"}}
         ],
