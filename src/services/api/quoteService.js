@@ -436,8 +436,7 @@ const filteredData = {
         month: 'short',
         day: 'numeric'
       });
-    } catch {
-} catch {
+} catch (error) {
       return 'Invalid Date';
     }
   },
