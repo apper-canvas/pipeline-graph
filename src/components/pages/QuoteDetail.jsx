@@ -94,8 +94,16 @@ const handleConvertToInvoice = async () => {
       const invoice = await quoteService.convertToInvoice(quote.Id);
       toast.success(`Quote converted to invoice successfully! Invoice ID: ${invoice.Id}`);
       
-      // Refresh quote data to show updated status
-      const updatedQuote = await quoteService.getById(quote.Id);
+// Refresh quote data to show updated status
+      try {
+        const updatedQuote = await quoteService.getById(quote.Id);
+        if (updatedQuote) {
+          setQuote(updatedQuote);
+        }
+      } catch (refreshError) {
+        console.error('Error refreshing quote data:', refreshError);
+        // Continue with success message even if refresh fails
+      }
       setQuote(updatedQuote);
     } catch (error) {
       console.error('Error converting to invoice:', error);
