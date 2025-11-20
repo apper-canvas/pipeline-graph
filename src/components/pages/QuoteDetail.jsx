@@ -101,10 +101,9 @@ const handleConvertToInvoice = async () => {
           setQuote(updatedQuote);
         }
       } catch (refreshError) {
-        console.error('Error refreshing quote data:', refreshError);
+console.error('Error refreshing quote data:', refreshError);
         // Continue with success message even if refresh fails
       }
-      setQuote(updatedQuote);
     } catch (error) {
       console.error('Error converting to invoice:', error);
       toast.error(error.message || 'Failed to convert quote to invoice');
