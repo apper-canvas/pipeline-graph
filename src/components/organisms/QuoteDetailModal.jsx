@@ -251,9 +251,9 @@ const handleSave = async () => {
       setError(err.message || 'Failed to send quote');
       console.error('Error sending quote:', err);
     } finally {
-      setSaving(false);
+setSaving(false);
     }
-256]    }
+  }
 
   const handleDelete = async () => {
     if (!quote || !window.confirm('Are you sure you want to delete this quote? This action cannot be undone.')) {
